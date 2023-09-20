@@ -24,19 +24,19 @@ seed: .res 2       ; initialize 16-bit seed to any value except 0
 
 ; clobbers: x and accum
 prng:
-	ldx #8     ; iteration count (generates 8 bits)
-	lda seed+0
+    ldx #8     ; iteration count (generates 8 bits)
+    lda seed+0
 :
-	asl        ; shift the register
-	rol seed+1
-	bcc :+
-	eor #$2D   ; apply XOR feedback whenever a 1 bit is shifted out
+    asl        ; shift the register
+    rol seed+1
+    bcc :+
+    eor #$2D   ; apply XOR feedback whenever a 1 bit is shifted out
 :
-	dex
-	bne :--
-	sta seed+0
-	cmp #0     ; reload flags
-	rts
+    dex
+    bne :--
+    sta seed+0
+    cmp #0     ; reload flags
+    rts
 
 ; generate random value from 1-2
 d2:
