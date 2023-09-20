@@ -5,7 +5,7 @@
 .segment "CODE"
 
 .proc render
-    screen_ptr = tmp
+    screen_ptr = tmp1
     map_ptr    = tmp2
 
     ldy #0
