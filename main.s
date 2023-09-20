@@ -1,31 +1,51 @@
 .include "global.inc"
 
 .import init, generate, render
+.importzp seed
+
+map_end = map + MAP_TILES*.sizeof(Tile)
 
 .segment "ZEROPAGE"
-tmp:  .res 2
+tmp1: .res 2
 tmp2: .res 2
+tmp3: .res 2
 
-.segment "DATA"
-map: .res MAP_COLS * MAP_ROWS * .sizeof(Tile)
+.segment "BSS"
+map: .res MAP_TILES * .sizeof(Tile)
 
+.segment "INIT"
 .segment "ONCE"
 .segment "STARTUP"
     jsr init
-    ; TODO title screen
+    jsr titlescreen
     jsr generate
     jsr render
 
-    ldx #0
-    lda hello
-:   jsr CHROUT
-    inx
-    lda hello, x
-    bne :-
-
 gameloop:
+:   ; lookup keyboard matrix for return
+    ; see: https://c64os.com/post/howthekeyboardworks
+    lda #%11111110
+    sta $DC00
+    lda $DC01
+    cmp #%11111101
+    beq :+
+    jmp gameloop
+:   jsr generate
+    jsr render
     jmp gameloop
 
-hello:
-    .asciiz "hello world!"
+titlescreen:
+    lda #$1F
+    sta seed + 1
+    ; TODO render a title screen
+:   ; lookup keyboard matrix for return
+    ; see: https://c64os.com/post/howthekeyboardworks
+    lda #%11111110
+    sta $DC00
+    lda $DC01
+    cmp #%11111101
+    beq :+
+    add16 seed, 1
+    jmp :-
+:   rts
 

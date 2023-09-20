@@ -17,20 +17,21 @@
     sta map_ptr
     lda #>map
     sta map_ptr + 1
+
     ; loop through map, storing at SCREEN_RAM
-    ; TODO lda wrong - map size less than screen size, also needs conversion from Tile -> screen code
 :   lda (map_ptr), y
+    cmp #MAP_FLOOR
+    bne clear
+    lda #1 ; floor tile
+    jmp update
+clear:
+    lda #$20 ; space (don't render for now)
+update:
     sta (screen_ptr), y
-    iny
+    add16 map_ptr, .sizeof(Tile)
+    add16 screen_ptr, 1
+    is_end_of_map map_ptr
     bne :-
-    ; go to next 256 offset, by increasing high byte of screen_ptr
-    inc map_ptr + 1
-    inc screen_ptr + 1
-    lda screen_ptr + 1
-    ; TODO need to compare 16 bit values to determine if done
-    ; loop back if we're not at end of screen ram
-    cmp #>SCREEN_RAM_END + 1
-    bne :-
-    
+
     rts
 .endproc
