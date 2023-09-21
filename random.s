@@ -12,17 +12,19 @@
 ;
 ; Execution time is an average of 125 cycles (excluding jsr and rts)
 
-.exportzp seed
-.export prng, d2, d3, d4, d6, d8, d12
+.export seed, prng, d2, d3, d4, d6, d8, d12
+.export _seed, _prng, _d3
 .import divide
 
-.segment "ZEROPAGE"
+.segment "DATA"
 
-seed: .res 2       ; initialize 16-bit seed to any value except 0
+_seed: .res 2       ; initialize 16-bit seed to any value except 0
+seed = _seed
 
 .segment "CODE"
 
 ; clobbers: x and accum
+_prng:
 prng:
     ldx #8     ; iteration count (generates 8 bits)
     lda seed+0
@@ -36,6 +38,7 @@ prng:
     bne :--
     sta seed+0
     cmp #0     ; reload flags
+    ldx #0
     rts
 
 ; generate random value from 1-2
@@ -48,6 +51,7 @@ d2:
     rts
 
 ; generate random value from 1-3
+_d3:
 d3:
     jsr prng
     ; divide result by 3
@@ -56,6 +60,7 @@ d3:
     ; add 1 to remainder get 1-3
     clc
     adc #1
+    ldx #0
     rts
 
 ; generate random value from 1-4

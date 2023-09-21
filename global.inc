@@ -6,49 +6,7 @@ MAP_COLS       = 40
 MAP_ROWS       = 20
 MAP_TILES      = MAP_COLS * MAP_ROWS
 
-MAP_WALL     = %00000000
-MAP_FLOOR    = %00000001
-MAP_DOOR     = %00000011
-MAP_STAIR    = %00000101
-MAP_CHEST    = %00001001
-MAP_FOUNTAIN = %00010001
-
-.globalzp tmp1, tmp2, tmp3
-
-.global map
-.global map_end
-
-.macro is_end_of_map addr
-.scope
-    lda addr + 1
-    cmp #>map_end
-    bne no
-    lda addr
-    cmp #<map_end
-    bne no
-    lda #0
-    jmp end
-no:
-    lda #1
-end:
-.endscope
-.endmacro
-
-.struct Tile
-    type .byte
-    .struct Mob
-        type .byte            ; one of MAP_MOB_* masks
-        stats .byte
-    .endstruct
-    .struct Item
-        type .byte            ; one of MAP_ITEM_* masks
-        .union Specifics
-            enchantment .byte ; for weapon/armor
-            appearance  .byte ; for scroll/potion/wand
-        .endunion
-    .endstruct
-.endstruct
-MAP_SIZE = MAP_TILES * .sizeof(Tile)
+.globalzp ptr1, ptr2, ptr3
 
 .macro add16 addr, word
     clc
@@ -68,3 +26,19 @@ MAP_SIZE = MAP_TILES * .sizeof(Tile)
     adc addr2 + 1
     sta addr + 1
 .endmacro
+.macro cp16 addr, addr2
+.scope
+    lda addr + 1
+    cmp addr2 + 1
+    bne no
+    lda addr
+    cmp addr2
+    bne no
+    lda #0
+    jmp end
+no:
+    lda #1
+end:
+.endscope
+.endmacro
+; TODO sub16 func

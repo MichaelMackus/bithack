@@ -1,6 +1,6 @@
 .include "global.inc"
 
-.importzp tmp1, tmp2
+.importzp ptr1, ptr2
 .export divide, mult16
 
 .segment "CODE"
@@ -12,9 +12,9 @@
 ;
 ; out: remainder (mod)
 ; x:   result of division
-; affects: x, tmp1
+; affects: x, ptr1
 .proc divide
-    divisor  = tmp1
+    divisor  = ptr1
     stx divisor
     ldx #0
 loop:
@@ -31,15 +31,15 @@ done:
 
 ; 16-bit multiplication x * y
 ;
-; tmp1: y (16-bit value)
+; ptr1: y (16-bit value)
 ; x:    x (8-bit value)
 ;
-; out: 16-bit result put in tmp1
-; affects: x, y, tmp1, tmp2, tmp3
+; out: 16-bit result put in ptr1
+; affects: x, y, ptr1, ptr2, ptr3
 .proc mult16
-    result = tmp1
-    count  = tmp2
-    start  = tmp3
+    result = ptr1
+    count  = ptr2
+    start  = ptr3
     stx count
     ldx #0
     cpx count

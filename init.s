@@ -1,8 +1,8 @@
 .include "global.inc"
-.export init
+.export _init
 
 .segment "CODE"
-init:
+_init:
     ; disable SHIFT-Commodore
     lda #$80
     sta $0291
