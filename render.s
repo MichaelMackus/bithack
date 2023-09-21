@@ -1,15 +1,53 @@
 .include "global.inc"
 
-.export _render
+.export _render_map
+.export _render_buffer
+.export _draw_buffer
+.export _draw_buffer_idx
+
 .importzp sp
 
+.segment "BSS"
+
+_draw_buffer:     .res 255
+_draw_buffer_idx: .byte 0
+
 .segment "CODE"
+
+; render the draw buffer
+.proc _render_buffer
+    idx = ptr1
+    ch  = ptr2
+    ldx #0
+:   cpx _draw_buffer_idx
+    beq done ; if we are pointing to y we are done
+    lda _draw_buffer, x
+    sta ch
+    inx
+    lda _draw_buffer, x
+    sta idx
+    inx
+    lda _draw_buffer, x
+    sta idx + 1
+    inx
+    add16 idx, SCREEN_RAM ; store the absolute address in screen ram into idx
+    ; store the character into screen ram pointed to by idx
+    lda ch
+    ldy #0
+    sta (idx), y
+    jmp :-
+
+done:
+    lda #0
+    sta _draw_buffer_idx
+    rts
+.endproc
 
 ; takes two 16-bit args
 ;
 ; arg1: tiles_start (pushed onto stack, HB then LB)
 ; arg2: tiles_end   (LB stored in A, HB in X)
-.proc _render
+.proc _render_map
     screen_ptr = ptr1
     map_ptr    = ptr2
     map_end    = ptr3

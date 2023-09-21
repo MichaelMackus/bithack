@@ -22,7 +22,7 @@ void init_dungeon_tiles()
 //   - (optionally) hide doors or corridors
 void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, unsigned short toY)
 {
-    unsigned int index;
+    unsigned short index;
     signed char offset_x, offset_y;
 
     dungeon_tiles[fromX + fromY*sizeof(*dungeon_tiles)*MAP_COLS] = '#';
@@ -60,29 +60,29 @@ void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, u
     }
 }
 
-unsigned int rand_room_idx()
+unsigned short rand_room_idx()
 {
-    unsigned int idx;
+    unsigned short idx;
 
-    while (dungeon_tiles[idx] != MAP_ROOM)
+    do
     {
         idx = rand() % MAP_SIZE;
-    }
+    } while (dungeon_tiles[idx] != MAP_ROOM);
 
     return idx;
 }
 
-unsigned int xy_to_idx(unsigned char x, unsigned char y)
+unsigned short xy_to_idx(unsigned char x, unsigned char y)
 {
     return x + y*MAP_COLS;
 }
 
-unsigned char idx_to_x(unsigned int idx)
+unsigned char idx_to_x(unsigned short idx)
 {
     return idx % MAP_COLS;
 }
 
-unsigned char idx_to_y(unsigned int idx)
+unsigned char idx_to_y(unsigned short idx)
 {
     return idx / MAP_COLS;
 }

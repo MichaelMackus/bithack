@@ -17,6 +17,9 @@ typedef struct Player Player;
 void init_player();
 
 // initialize player at start of dungeon level
-void change_player_dlevel(unsigned int x, unsigned int y);
+void change_player_dlevel(unsigned short x, unsigned short y);
+
+// get player tile symbol
+unsigned char player_tile();
 
 #endif

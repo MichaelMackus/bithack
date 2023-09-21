@@ -26,15 +26,15 @@ void init_dungeon_tiles();
 void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, unsigned short toY);
 
 // generate coordinate inside room (e.g. when changing dungeon level)
-unsigned int rand_room_idx();
+unsigned short rand_room_idx();
 
 // XY to index
-unsigned int xy_to_idx(unsigned char x, unsigned char y);
+unsigned short xy_to_idx(unsigned char x, unsigned char y);
 
 // index to X
-unsigned char idx_to_x(unsigned int idx);
+unsigned char idx_to_x(unsigned short idx);
 
 // index to Y
-unsigned char idx_to_y(unsigned int idx);
+unsigned char idx_to_y(unsigned short idx);
 
 #endif
