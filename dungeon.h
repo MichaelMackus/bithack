@@ -19,7 +19,22 @@
 #define MAP_DOOR     2
 #define MAP_CORRIDOR 3
 
-unsigned char *init_dungeon_tiles();
+// initialize our dungeon tiles array
+void init_dungeon_tiles();
+
+// draw line (e.g. to connect dungeon rooms)
 void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, unsigned short toY);
+
+// generate coordinate inside room (e.g. when changing dungeon level)
+unsigned int rand_room_idx();
+
+// XY to index
+unsigned int xy_to_idx(unsigned char x, unsigned char y);
+
+// index to X
+unsigned char idx_to_x(unsigned int idx);
+
+// index to Y
+unsigned char idx_to_y(unsigned int idx);
 
 #endif

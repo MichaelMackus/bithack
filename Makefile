@@ -1,4 +1,4 @@
-objs = dungeon_generator.o dungeon.o main.o random.o init.o math.o render.o
+objs = dungeon_generator.o dungeon.o main.o random.o init.o math.o render.o player.o
 CCFLAGS=-Osir -Cl
 
 rl.prg: $(objs)
@@ -10,6 +10,8 @@ dungeon_generator.s: dungeon_generator.c
 	cc65 $(CCFLAGS) -o dungeon_generator.s -t c64 dungeon_generator.c
 dungeon.s: dungeon.c
 	cc65 $(CCFLAGS) -o dungeon.s -t c64 dungeon.c
+player.s: player.c
+	cc65 $(CCFLAGS) -o player.s -t c64 player.c
 
 %.o: %.s
 	ca65 -t c64 $< -o $@

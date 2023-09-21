@@ -5,12 +5,10 @@
 unsigned char *dungeon_tiles;
 unsigned char *dungeon_tiles_end;
 
-unsigned char *init_dungeon_tiles()
+void init_dungeon_tiles()
 {
     dungeon_tiles = malloc(sizeof(*dungeon_tiles) * MAP_SIZE);
     dungeon_tiles_end = dungeon_tiles  +  sizeof(*dungeon_tiles) * MAP_SIZE;
-
-    return dungeon_tiles;
 }
 
 // TODO pseudo-code:
@@ -60,4 +58,31 @@ void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, u
         if (dungeon_tiles[index] == MAP_WALL)
             dungeon_tiles[index] = MAP_CORRIDOR;
     }
+}
+
+unsigned int rand_room_idx()
+{
+    unsigned int idx;
+
+    while (dungeon_tiles[idx] != MAP_ROOM)
+    {
+        idx = rand() % MAP_SIZE;
+    }
+
+    return idx;
+}
+
+unsigned int xy_to_idx(unsigned char x, unsigned char y)
+{
+    return x + y*MAP_COLS;
+}
+
+unsigned char idx_to_x(unsigned int idx)
+{
+    return idx % MAP_COLS;
+}
+
+unsigned char idx_to_y(unsigned int idx)
+{
+    return idx / MAP_COLS;
 }
