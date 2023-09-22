@@ -1,18 +1,23 @@
-OBJS = dungeon_generator.o dungeon.o random.o init.o math.o render.o player.o input.o mob.o
+OBJS = dungeon_generator.o dungeon.o player.o mob.o
+ASM_OBJS = math.o init.o input.o render.o
 TEST_OBJS = test/dungeon_generation.o
 TESTS = test/dungeon_generation
-CCFLAGS=-Osir -Cl
 MAKEFLAGS+= --no-builtin-rules
 
-rl.prg: main.o $(OBJS)
-	ld65 -o rl.prg -t c64 main.o $(OBJS) c64.lib
+rl:
+	make -f Makefile-gcc OBJS="main.o $(OBJS)" all
 
-%.s: %.c
-	cc65 $(CCFLAGS) -o $@ -t c64 $<
-
-%.o: %.s
-	ca65 -t c64 $< -o $@
+rl.prg:
+	make -f Makefile-c64 OBJS="main.o $(ASM_OBJS) $(OBJS)" all
 
 clean:
-	rm *.prg *.o main.s mob.s dungeon.s player.s dungeon_generator.s
+	rm rl *.o rl.prg
+	rm test/*.o
+	rm $(TESTS)
 
+test: $(TESTS)
+	make $(TESTS)
+
+$(TESTS): $(TEST_OBJS) $(OBJS)
+	ld65 -o $@ -t c64 $(TEST_OBJS) $(OBJS) c64.lib
+	./$@

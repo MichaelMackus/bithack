@@ -1,6 +1,6 @@
 .include "global.inc"
 .export _init
-.import _draw_buffer
+
 .import _draw_buffer_idx
 
 .segment "CODE"
@@ -47,6 +47,5 @@ _init:
     ; initialize draw buffer
     lda #0
     sta _draw_buffer_idx
-    sta _draw_buffer
 
     rts

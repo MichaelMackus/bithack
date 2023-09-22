@@ -10,8 +10,8 @@
 
 .segment "BSS"
 
-_draw_buffer:     .res 255
-_draw_buffer_idx: .byte 0
+_draw_buffer:      .res 255
+_draw_buffer_idx:  .byte 0
 
 .segment "CODE"
 
@@ -69,11 +69,6 @@ done:
 
     ; loop through map, storing at SCREEN_RAM
 :   lda (map_ptr), y
-    ; cmp #MAP_FLOOR
-    beq clear
-    jmp update
-clear:
-    lda #$20 ; space (don't render for now)
 update:
     sta (screen_ptr), y
     add16 map_ptr, 1

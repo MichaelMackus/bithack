@@ -1,3 +1,5 @@
+#define MAX_MOBS 100
+
 #define MOB_GOBLIN 1
 #define MOB_KOBOLD 2
 #define MOB_ORC 3
@@ -10,7 +12,7 @@ struct Mob {
 };
 typedef struct Mob Mob;
 
-extern Mob *mobs;
+extern Mob mobs[MAX_MOBS];
 extern unsigned short num_mobs;
 
 // initialize mobs at start of game

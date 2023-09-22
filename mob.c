@@ -4,12 +4,11 @@
 #include "mob.h"
 #include "dungeon.h"
 
-Mob *mobs;
+Mob mobs[MAX_MOBS];
 unsigned short num_mobs;
 
 void init_mobs()
 {
-    mobs = malloc(sizeof(*mobs) * MAP_SIZE);
     clear_mobs();
 }
 
@@ -25,7 +24,7 @@ void cleanup_mobs()
     Mob *cur_mobs = mobs;
     for (; i<num_mobs; ++i) {
         if (cur_mobs->hp == 0) {
-            memcpy(cur_mobs, cur_mobs + 1, MAP_SIZE - i - 1);
+            memcpy(cur_mobs, cur_mobs + 1, sizeof(mobs) - (MAX_MOBS - i - 1) * sizeof(*mobs));
             ++killed;
         }
         ++cur_mobs;

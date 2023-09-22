@@ -1,0 +1,16 @@
+CCFLAGS=-Osir -Cl -I./
+MAKEFLAGS+= --no-builtin-rules
+
+all: rl.prg
+
+rl.prg: $(OBJS)
+	ld65 -o rl.prg -t c64 $(OBJS) c64.lib
+
+%.s: %.c
+	cc65 $(CCFLAGS) -o $@ -t c64 $<
+
+%.o: %.s
+	ca65 -t c64 $< -o $@
+
+clean:
+	rm *.prg *.o

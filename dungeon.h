@@ -14,12 +14,12 @@
 #define BSP_HEIGHT MAP_ROWS/ROOMS_PER_COL
 #define BSP_PADDING 2
 
-#define MAP_WALL     0
+#define MAP_WALL     0x20
 #define MAP_ROOM     0x2E
 #define MAP_DOOR     0x2B
 #define MAP_CORRIDOR 0x23
 
-extern unsigned char *dungeon_tiles;
+extern unsigned char dungeon_tiles[MAP_SIZE];
 extern unsigned char *dungeon_tiles_end;
 
 // initialize our dungeon tiles array

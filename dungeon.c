@@ -2,13 +2,12 @@
 
 #include <stdlib.h>
 
-unsigned char *dungeon_tiles;
+unsigned char dungeon_tiles[MAP_SIZE];
 unsigned char *dungeon_tiles_end;
 
 void init_dungeon_tiles()
 {
-    dungeon_tiles = malloc(sizeof(*dungeon_tiles) * MAP_SIZE);
-    dungeon_tiles_end = dungeon_tiles  +  sizeof(*dungeon_tiles) * MAP_SIZE;
+    dungeon_tiles_end = &dungeon_tiles[0]  +  sizeof(*dungeon_tiles) * MAP_SIZE;
 }
 
 // TODO pseudo-code:

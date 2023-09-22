@@ -7,9 +7,15 @@ Player player;
 
 void init_player()
 {
+    unsigned short i;
     player.hp = 8;
     player.max_hp = 8;
     player.thaco = 19;
+    player.exp = 0;
+    player.items = malloc(PLAYER_MAX_ITEMS);
+    for (i = 0; i < MAP_SIZE; ++i) {
+        player.seen[i] = 0;
+    }
 }
 
 void change_player_dlevel(unsigned short x, unsigned short y)

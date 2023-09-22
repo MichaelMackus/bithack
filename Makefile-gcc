@@ -1,0 +1,14 @@
+MAKEFLAGS+= --no-builtin-rules
+CCFLAGS=-Wall -D=PC
+LDFLAGS=-lcurses
+
+all: rl
+
+rl: $(OBJS)
+	gcc -o rl $(OBJS) $(LDFLAGS)
+
+%.o: %.c
+	gcc $(CCFLAGS) $< -c -o $@
+
+clean:
+	rm rl *.o

@@ -1,9 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
 #include <string.h>
-#include <joystick.h>
 #include <ctype.h>
+
+#ifdef PC
+#include "platform/pc.c"
+#else
+#include "platform/c64.c"
+#endif
 
 #include "dungeon.h"
 #include "dungeon_generator.h"
@@ -13,20 +17,19 @@
 #define MAX_DRAW_BUFFER_SIZE 255
 
 extern void init();
+extern void deinit();
 extern void render_map(unsigned char *tiles_start, unsigned char *tiles_end);
 extern void render_buffer();
 extern void wait_for_vblank();
 extern unsigned char read_input();
-extern short seed;
-
-extern unsigned char draw_buffer;
+extern unsigned char *draw_buffer_ptr;
 extern unsigned char draw_buffer_idx;
+extern void cputsxy(unsigned char x, unsigned char y, const char *str);
+extern unsigned char kbhit();
 
 void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
 {
     unsigned short idx;
-    unsigned char *draw_buffer_ptr;
-    draw_buffer_ptr = &draw_buffer;
 
     if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
         // TODO error
@@ -61,8 +64,6 @@ void title_screen()
 // return dungeon or player tile at location
 unsigned short tile_at(unsigned char x, unsigned char y)
 {
-    unsigned short i;
-
     if (player.x == x && player.y == y) {
         return player_tile();
     }
@@ -72,8 +73,10 @@ unsigned short tile_at(unsigned char x, unsigned char y)
 
 int main()
 {
-    unsigned char input, quit;
     unsigned short i;
+    unsigned char input = 0;
+    unsigned char quit = 0;
+
     init();
     title_screen();
 
@@ -135,7 +138,7 @@ int main()
         }
     }
 
-    clrscr();
+    deinit();
 
     return 0;
 }

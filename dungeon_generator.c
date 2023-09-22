@@ -112,7 +112,7 @@ void generate_tiles()
 
     // clear map
     for (i = 0; i < MAP_SIZE; ++i) {
-        *cur_tile = 0;
+        *cur_tile = MAP_WALL;
         ++cur_tile;
     }
 
@@ -232,8 +232,8 @@ unsigned short rand_room_idx()
 
 void generate_dlevel()
 {
-    unsigned char num_mobs = rand() % 11 + MIN_MOBS;
     unsigned char generation_result;
+    unsigned char num_mobs = rand() % 11 + MIN_MOBS;
 
     // generate dungeon tile map
     generate_tiles();
