@@ -1,14 +1,38 @@
-enum MobType {
-    MOB_GOBLIN = 'g',
-    MOB_KOBOLD = 'k',
-    MOB_ORC = 'o',
-    MOB_OGRE = 'O',
-    MOB_DRAGON = 'D',
-};
-typedef enum MobType MobType;
+#define MOB_GOBLIN 1
+#define MOB_KOBOLD 2
+#define MOB_ORC 3
+#define MOB_DRAGON 4
 
 struct Mob {
-    MobType type;
-    unsigned char hp, maxHP;
+    unsigned char type;
+    unsigned char hp, max_hp;
+    unsigned char x, y;
 };
 typedef struct Mob Mob;
+
+extern Mob *mobs;
+extern unsigned short num_mobs;
+
+// initialize mobs at start of game
+void init_mobs();
+
+// clear mobs in dungeon level
+void clear_mobs();
+
+// cleanup dead mobs, decrementing num_mobs & adjusting the memory
+void cleanup_mobs();
+
+// generate new mob & insert it into mob list
+void generate_mob(unsigned char mob_type, unsigned char x, unsigned char y);
+
+// get tile for mob
+unsigned char mob_tile(unsigned char mob_type);
+
+// get mob at xy
+Mob *mob_at(unsigned char x, unsigned char y);
+
+// get mob AC
+signed char mob_ac(unsigned char mob_type);
+
+// damage a mob
+void hurt(Mob *target, unsigned char damage);

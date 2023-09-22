@@ -25,7 +25,9 @@ void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, u
     unsigned short index;
     signed char offset_x, offset_y;
 
-    dungeon_tiles[fromX + fromY*sizeof(*dungeon_tiles)*MAP_COLS] = '#';
+    index = fromX + fromY*sizeof(*dungeon_tiles)*MAP_COLS;
+    if (dungeon_tiles[index] == MAP_WALL)
+        dungeon_tiles[index] = MAP_CORRIDOR;
 
     if (fromX < toX) {
         offset_x = 1;
@@ -60,16 +62,16 @@ void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, u
     }
 }
 
-unsigned short rand_room_idx()
+unsigned short dungeon_tile_at(unsigned char x, unsigned char y)
 {
     unsigned short idx;
 
-    do
-    {
-        idx = rand() % MAP_SIZE;
-    } while (dungeon_tiles[idx] != MAP_ROOM);
+    if (x >= MAP_COLS || y >= MAP_ROWS)
+        return MAP_WALL;
 
-    return idx;
+    idx = xy_to_idx(x, y);
+
+    return dungeon_tiles[idx];
 }
 
 unsigned short xy_to_idx(unsigned char x, unsigned char y)

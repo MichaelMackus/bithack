@@ -1,8 +1,9 @@
 #ifndef DUNGEON_GENERATOR_H
 #define DUNGEON_GENERATOR_H
 
-#include "dungeon.h"
+void generate_dlevel();
 
-void generate_tiles();
+// return actual number generated (will be less than num_mobs if generation failed)
+unsigned char generate_mobs(unsigned char num_mobs);
 
 #endif

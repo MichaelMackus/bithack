@@ -1,20 +1,18 @@
-objs = dungeon_generator.o dungeon.o main.o random.o init.o math.o render.o player.o
+OBJS = dungeon_generator.o dungeon.o random.o init.o math.o render.o player.o input.o mob.o
+TEST_OBJS = test/dungeon_generation.o
+TESTS = test/dungeon_generation
 CCFLAGS=-Osir -Cl
+MAKEFLAGS+= --no-builtin-rules
 
-rl.prg: $(objs)
-	ld65 -o rl.prg -t c64 $(objs) c64.lib
+rl.prg: main.o $(OBJS)
+	ld65 -o rl.prg -t c64 main.o $(OBJS) c64.lib
 
-main.s: main.c
-	cc65 $(CCFLAGS) -o main.s -t c64 main.c
-dungeon_generator.s: dungeon_generator.c
-	cc65 $(CCFLAGS) -o dungeon_generator.s -t c64 dungeon_generator.c
-dungeon.s: dungeon.c
-	cc65 $(CCFLAGS) -o dungeon.s -t c64 dungeon.c
-player.s: player.c
-	cc65 $(CCFLAGS) -o player.s -t c64 player.c
+%.s: %.c
+	cc65 $(CCFLAGS) -o $@ -t c64 $<
 
 %.o: %.s
 	ca65 -t c64 $< -o $@
 
 clean:
-	rm *.prg *.o
+	rm *.prg *.o main.s mob.s dungeon.s player.s dungeon_generator.s
+

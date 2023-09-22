@@ -2,6 +2,7 @@
 
 .export _render_map
 .export _render_buffer
+.export _wait_for_vblank
 .export _draw_buffer
 .export _draw_buffer_idx
 
@@ -70,7 +71,6 @@ done:
 :   lda (map_ptr), y
     ; cmp #MAP_FLOOR
     beq clear
-    lda #$AE ; floor tile
     jmp update
 clear:
     lda #$20 ; space (don't render for now)
@@ -86,4 +86,14 @@ update:
     inc sp
 
     rts
+.endproc
+
+.proc _wait_for_vblank
+wait_for_next_frame:
+     bit $d011
+     bpl wait_for_next_frame
+     lda $d012
+:    cmp $d012
+     bmi :-
+     rts
 .endproc

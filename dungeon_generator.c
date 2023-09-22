@@ -1,9 +1,15 @@
 #include "dungeon_generator.h"
+#include "dungeon.h"
+#include "mob.h"
+#include "player.h"
 
 #include <stdlib.h>
 
-extern unsigned char *dungeon_tiles;
-extern unsigned char *dungeon_tiles_end;
+#define MAX_ITERATIONS 20
+#define MIN_MOBS 5
+
+// NOTE: will return MAP_SIZE if reached MAX_ITERATIONS
+unsigned short rand_room_idx();
 
 // get room start
 unsigned char *room_start(unsigned char x, unsigned char y)
@@ -156,5 +162,90 @@ void generate_tiles()
         h = room_height(start_tile);
         draw_corridor_right(x, y, offset_x + (w - 1)/2, offset_y + (h - 1)/2);
         draw_corridor_down(x, y, offset_x + (w - 1)/2, offset_y + (h - 1)/2);
+    }
+}
+
+unsigned char generate_mobs(unsigned char num_mobs)
+{
+    // generate mobs on level change
+    unsigned short idx;
+    unsigned char i, x, y, result;
+    unsigned char count = 0;
+
+    // generate some monsters
+    // TODO difficulty
+    for (i=0; i<num_mobs; ++i) {
+        do {
+            idx = rand_room_idx();
+            if (idx >= MAP_SIZE) return i;
+            x = idx_to_x(idx);
+            y = idx_to_y(idx);
+            ++count;
+            if (count >= MAX_ITERATIONS) return i;
+        } while (mob_at(x, y));
+        result = rand() % 100;
+        if (result < 40) {
+            generate_mob(MOB_KOBOLD, x, y);
+        } else if (result < 75) {
+            generate_mob(MOB_GOBLIN, x, y);
+        } else {
+            generate_mob(MOB_ORC, x, y);
+        }
+    }
+
+    return num_mobs;
+}
+
+unsigned char generate_player_xy()
+{
+    unsigned short idx;
+    unsigned char x, y;
+    unsigned char count = 0;
+
+    do {
+        idx = rand_room_idx();
+        if (idx >= MAP_SIZE) return 0;
+        x = idx_to_x(idx);
+        y = idx_to_y(idx);
+        ++count;
+        if (count >= MAX_ITERATIONS) return 0;
+    } while (mob_at(x, y));
+    change_player_dlevel(x, y);
+
+    return 1;
+}
+
+unsigned short rand_room_idx()
+{
+    unsigned short idx;
+    unsigned char count = 0;
+
+    do
+    {
+        idx = rand() % MAP_SIZE;
+        ++count;
+        if (count >= MAX_ITERATIONS) return MAP_SIZE;
+    } while (dungeon_tiles[idx] != MAP_ROOM);
+
+    return idx;
+}
+
+void generate_dlevel()
+{
+    unsigned char num_mobs = rand() % 11 + MIN_MOBS;
+    unsigned char generation_result;
+
+    // generate dungeon tile map
+    generate_tiles();
+    clear_mobs();
+    generation_result = generate_mobs(num_mobs);
+    /* if (generation_result < MIN_MOBS) { */
+    /*     generate_dlevel(); */
+    /*     return; */
+    /* } */
+    generation_result = generate_player_xy();
+    if (!generation_result) {
+        generate_dlevel();
+        return;
     }
 }

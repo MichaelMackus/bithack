@@ -15,9 +15,12 @@
 #define BSP_PADDING 2
 
 #define MAP_WALL     0
-#define MAP_ROOM     1
-#define MAP_DOOR     2
-#define MAP_CORRIDOR 3
+#define MAP_ROOM     0x2E
+#define MAP_DOOR     0x2B
+#define MAP_CORRIDOR 0x23
+
+extern unsigned char *dungeon_tiles;
+extern unsigned char *dungeon_tiles_end;
 
 // initialize our dungeon tiles array
 void init_dungeon_tiles();
@@ -25,8 +28,8 @@ void init_dungeon_tiles();
 // draw line (e.g. to connect dungeon rooms)
 void draw_line(unsigned short fromX, unsigned short fromY, unsigned short toX, unsigned short toY);
 
-// generate coordinate inside room (e.g. when changing dungeon level)
-unsigned short rand_room_idx();
+// returns tile at xy position
+unsigned short dungeon_tile_at(unsigned char x, unsigned char y);
 
 // XY to index
 unsigned short xy_to_idx(unsigned char x, unsigned char y);
