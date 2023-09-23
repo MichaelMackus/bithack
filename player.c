@@ -12,7 +12,6 @@ void init_player()
     player.max_hp = 8;
     player.thaco = 19;
     player.exp = 0;
-    player.items = malloc(PLAYER_MAX_ITEMS);
     for (i = 0; i < MAP_SIZE; ++i) {
         player.seen[i] = 0;
     }
@@ -34,9 +33,11 @@ void attack_mob(Mob *target)
     signed char target_ac = mob_ac(target->type);
     unsigned char to_hit = rand() % 20 + 1;
     unsigned char damage = rand() % 6 + 1;
-    if (to_hit >= player.thaco - target_ac)
+    if (to_hit >= player.thaco - target_ac) {
         hurt(target, damage);
-    // TODO combat messages
+        // TODO combat messages
+        /* add_message( */
+    }
 }
 
 signed char player_ac()

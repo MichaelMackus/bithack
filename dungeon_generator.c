@@ -8,6 +8,8 @@
 #define MAX_ITERATIONS 20
 #define MIN_MOBS 5
 
+#define MAP_ERR MAP_SIZE+1
+
 // NOTE: will return MAP_SIZE if reached MAX_ITERATIONS
 unsigned short rand_room_idx();
 
@@ -241,7 +243,7 @@ void generate_tiles()
     }
 }
 
-unsigned char generate_mobs(unsigned char num_mobs)
+unsigned char generate_mobs(unsigned char mobs_to_generate)
 {
     // generate mobs on level change
     unsigned short idx;
@@ -250,15 +252,15 @@ unsigned char generate_mobs(unsigned char num_mobs)
 
     // generate some monsters
     // TODO difficulty
-    for (i=0; i<num_mobs; ++i) {
+    for (i=0; i<mobs_to_generate; ++i) {
         do {
             idx = rand_room_idx();
-            if (idx >= MAP_SIZE) return i;
+            if (idx == MAP_ERR) return i;
             x = idx_to_x(idx);
             y = idx_to_y(idx);
             ++count;
             if (count >= MAX_ITERATIONS) return i;
-        } while (mob_at(x, y));
+        } while (!is_passable(x, y));
         result = rand() % 100;
         if (result < 40) {
             generate_mob(MOB_KOBOLD, x, y);
@@ -269,7 +271,7 @@ unsigned char generate_mobs(unsigned char num_mobs)
         }
     }
 
-    return num_mobs;
+    return mobs_to_generate;
 }
 
 unsigned char generate_player_xy()
@@ -280,12 +282,12 @@ unsigned char generate_player_xy()
 
     do {
         idx = rand_room_idx();
-        if (idx >= MAP_SIZE) return 0;
+        if (idx == MAP_ERR) return 0;
         x = idx_to_x(idx);
         y = idx_to_y(idx);
         ++count;
         if (count >= MAX_ITERATIONS) return 0;
-    } while (mob_at(x, y));
+    } while (!is_passable(x, y));
     change_player_dlevel(x, y);
 
     return 1;
@@ -299,7 +301,7 @@ unsigned char generate_stair_xy()
 
     do {
         idx = rand_room_idx();
-        if (idx >= MAP_SIZE) return 0;
+        if (idx == MAP_ERR) return 0;
         x = idx_to_x(idx);
         y = idx_to_y(idx);
         ++count;
@@ -319,8 +321,8 @@ unsigned short rand_room_idx()
     {
         idx = rand() % MAP_SIZE;
         ++count;
-        if (count >= MAX_ITERATIONS) return MAP_SIZE;
-    } while (dungeon_tiles[idx] != MAP_ROOM);
+        if (count >= MAX_ITERATIONS) return MAP_ERR;
+    } while (dungeon_tiles[idx] != MAP_ROOM || !is_passable(idx_to_x(idx), idx_to_y(idx)));
 
     return idx;
 }
@@ -328,24 +330,26 @@ unsigned short rand_room_idx()
 void generate_dlevel()
 {
     unsigned char generation_result;
-    unsigned char num_mobs = rand() % 11 + MIN_MOBS;
+    unsigned char mobs_to_generate;
 
-    // generate dungeon tile map
-    generate_tiles();
-    clear_mobs();
-    generation_result = generate_mobs(num_mobs);
-    /* if (generation_result < MIN_MOBS) { */
-    /*     generate_dlevel(); */
-    /*     return; */
-    /* } */
-    generation_result = generate_player_xy();
-    if (!generation_result) {
-        generate_dlevel();
-        return;
-    }
-    generation_result = generate_stair_xy();
-    if (!generation_result) {
-        generate_dlevel();
-        return;
+    while (1) {
+        mobs_to_generate = rand() % 11 + MIN_MOBS;
+        // generate dungeon tile map
+        generate_tiles();
+        clear_mobs();
+        generation_result = generate_mobs(mobs_to_generate);
+        if (generation_result < MIN_MOBS) {
+            continue;
+        }
+        generation_result = generate_player_xy();
+        if (!generation_result) {
+            continue;
+        }
+        generation_result = generate_stair_xy();
+        if (!generation_result) {
+            continue;
+        }
+        // done generating
+        break;
     }
 }

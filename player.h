@@ -18,7 +18,7 @@ struct Player {
     unsigned char seen[MAP_SIZE];
     unsigned char thaco;
     unsigned char x, y;
-    Item *items; // max items?
+    Item items[PLAYER_MAX_ITEMS];
 };
 typedef struct Player Player;
 

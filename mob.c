@@ -15,6 +15,10 @@ void init_mobs()
 
 void clear_mobs()
 {
+    unsigned short i = 0;
+    for (; i<num_mobs; ++i) {
+        mobs[i].hp = 0;
+    }
     num_mobs = 0;
 }
 
