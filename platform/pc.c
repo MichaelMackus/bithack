@@ -35,13 +35,13 @@ unsigned char read_input()
 
 unsigned char kbhit()
 {
-    unsigned char ch;
+    int ch;
 
-    nodelay(0, true);
+    nodelay(stdscr, true);
     ch = getch();
-    nodelay(0, false);
+    nodelay(stdscr, false);
 
-    if (ch == ERR)
+    if (ch == ERR || ch > 255)
         return 0;
     else
         return ch;

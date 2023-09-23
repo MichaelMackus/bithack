@@ -49,14 +49,16 @@ void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
     add_to_draw_buffer_idx(idx, ch);
 }
 
+unsigned int seed;
 void title_screen()
 {
     int ch;
-    unsigned int seed = 0;
+    seed = 0;
     const char *title = "8bithack";
 
     cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
 
+    deinit();
     while (1)
     {
         ++seed;
@@ -79,7 +81,7 @@ void draw_tiles_player_can_see()
 {
     unsigned char x, y;
     unsigned char *room, *start;
-    unsigned short idx_start, i;
+    unsigned short idx_start;
     unsigned short idx = xy_to_idx(player.x, player.y);
 
     // draw adjacent corridors TODO diagonals
@@ -230,6 +232,8 @@ int main()
     if (lost) {
         printf("You were killed!\n");
     }
+
+    printf("Seed: %d\n", seed);
 
     return 0;
 }
