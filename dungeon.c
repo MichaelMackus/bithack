@@ -110,13 +110,13 @@ unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsign
 
 unsigned char is_passable(unsigned char x, unsigned char y)
 {
-    unsigned short idx = xy_to_idx(x, y);
-    /* Mob *mob = mob_at(x, y); */
     Mob *mob = 0;
+    unsigned short idx = xy_to_idx(x, y);
 
     if (idx > MAP_SIZE)
         return 0;
 
+    mob = mob_at(x, y);
     return (dungeon_tiles[idx] == MAP_ROOM || dungeon_tiles[idx] == MAP_STAIR || dungeon_tiles[idx] == MAP_DOOR || dungeon_tiles[idx] == MAP_CORRIDOR)
             && !mob && !(player.x == x && player.y == y);
 }
