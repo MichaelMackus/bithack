@@ -54,6 +54,8 @@ unsigned char tile_to_ch(unsigned char tile) {
         case MAP_CORRIDOR:
             return '#';
         case MAP_WALL:
+            return '-';
+        case MAP_ROCK:
             return ' ';
         case MAP_DOOR:
             return '+';

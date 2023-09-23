@@ -25,22 +25,28 @@ extern unsigned char read_input();
 extern unsigned char *draw_buffer_ptr;
 extern unsigned char draw_buffer_idx;
 extern void cputsxy(unsigned char x, unsigned char y, const char *str);
+extern void clrscr();
 extern unsigned char kbhit();
 
-void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
+void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
 {
-    unsigned short idx;
-
     if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
         // TODO error
         return;
     }
 
-    idx = xy_to_idx(x, y);
     draw_buffer_ptr[draw_buffer_idx + 0] = ch;
     draw_buffer_ptr[draw_buffer_idx + 1] = idx & 0xFF;
     draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
     draw_buffer_idx += 3;
+}
+
+void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
+{
+    unsigned short idx;
+
+    idx = xy_to_idx(x, y);
+    add_to_draw_buffer_idx(idx, ch);
 }
 
 void title_screen()
@@ -71,9 +77,61 @@ unsigned short tile_at(unsigned char x, unsigned char y)
     return dungeon_tile_at(x, y);
 }
 
+// TODO don't draw duplicate tiles, flashing on c64
+void draw_tiles_player_can_see()
+{
+    unsigned char x, y;
+    unsigned char *room, *start;
+    unsigned short idx_start, i;
+    unsigned short idx = xy_to_idx(player.x, player.y);
+
+    // draw adjacent corridors TODO diagonals
+    if (player.x < MAP_COLS - 1)
+        add_to_draw_buffer(player.x + 1, player.y, dungeon_tiles[idx + 1]);
+    if (player.x > 0)
+        add_to_draw_buffer(player.x - 1, player.y, dungeon_tiles[idx - 1]);
+    if (player.y < MAP_ROWS - 1)
+        add_to_draw_buffer(player.x, player.y + 1, dungeon_tiles[idx + MAP_COLS]);
+    if (player.y > 0)
+        add_to_draw_buffer(player.x, player.y - 1, dungeon_tiles[idx - MAP_COLS]);
+    render_buffer();
+
+    if (is_room(dungeon_tiles[idx])) {
+        // draw lit room we're in
+        x = bsp_x(player.x);
+        y = bsp_y(player.y);
+        room = room_start(x, y);
+        start = room;
+        
+        idx = room - dungeon_tiles;
+        idx_start = idx;
+        do {
+            do {
+                add_to_draw_buffer_idx(idx, *room);
+                ++room;
+                ++idx;
+            } while (is_room(*room));
+            start += MAP_COLS;
+            room = start;
+            idx_start += MAP_COLS;
+            idx = idx_start;
+        } while (is_room(*start));
+    }
+
+    // draw player
+    add_to_draw_buffer(player.x, player.y, player_tile());
+    render_buffer();
+
+    // draw seen mobs
+    for (i=0; i<num_mobs; ++i) {
+        if (mobs[i].hp > 0 && can_see(player.x, player.y, mobs[i].x, mobs[i].y))
+            add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
+    }
+    render_buffer();
+}
+
 int main()
 {
-    unsigned short i;
     unsigned char input = 0;
     unsigned char quit = 0;
 
@@ -85,22 +143,15 @@ int main()
     init_mobs();
     generate_dlevel();
 
-    render_map(dungeon_tiles, dungeon_tiles_end);
+    clrscr();
+    draw_tiles_player_can_see();
     add_to_draw_buffer(player.x, player.y, player_tile());
+    render_buffer();
 
     // game loop
     while (!quit) {
-        // TODO mobs AI & draw seen mobs
-        for (i=0; i<num_mobs; ++i) {
-            if (mobs[i].hp > 0)
-                add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
-            else
-                add_to_draw_buffer(mobs[i].x, mobs[i].y, tile_at(mobs[i].x, mobs[i].y));
-        }
-        cleanup_mobs(); // remove killed mobs after tile updated
         // wait for vblank then render
         wait_for_vblank();
-        render_buffer();
         // handle player input
         do {
             input = read_input();
@@ -112,30 +163,41 @@ int main()
                 break;
             case 'r':
                 generate_dlevel();
+                clrscr();
+                draw_tiles_player_can_see();
+                break;
+            case 'R':
+                generate_dlevel();
+                clrscr();
                 render_map(dungeon_tiles, dungeon_tiles_end);
-                add_to_draw_buffer(player.x, player.y, player_tile());
+                draw_tiles_player_can_see();
                 break;
             case 'j':
-                add_to_draw_buffer(player.x, player.y, dungeon_tile_at(player.x, player.y));
                 bump_player(DIRECTION_DOWN);
-                add_to_draw_buffer(player.x, player.y, tile_at(player.x, player.y));
+                draw_tiles_player_can_see();
                 break;
             case 'k':
-                add_to_draw_buffer(player.x, player.y, dungeon_tile_at(player.x, player.y));
                 bump_player(DIRECTION_UP);
-                add_to_draw_buffer(player.x, player.y, tile_at(player.x, player.y));
+                draw_tiles_player_can_see();
                 break;
             case 'l':
-                add_to_draw_buffer(player.x, player.y, dungeon_tile_at(player.x, player.y));
                 bump_player(DIRECTION_RIGHT);
-                add_to_draw_buffer(player.x, player.y, tile_at(player.x, player.y));
+                draw_tiles_player_can_see();
                 break;
             case 'h':
-                add_to_draw_buffer(player.x, player.y, dungeon_tile_at(player.x, player.y));
                 bump_player(DIRECTION_LEFT);
-                add_to_draw_buffer(player.x, player.y, tile_at(player.x, player.y));
+                draw_tiles_player_can_see();
+                break;
+            case '>':
+                if (dungeon_tile_at(player.x, player.y) == MAP_STAIR) {
+                    // TODO increase depth/difficulty
+                    generate_dlevel();
+                    clrscr();
+                    draw_tiles_player_can_see();
+                }
                 break;
         }
+        render_buffer();
     }
 
     deinit();

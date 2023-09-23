@@ -17,22 +17,6 @@ void clear_mobs()
     num_mobs = 0;
 }
 
-void cleanup_mobs()
-{
-    unsigned short killed = 0;
-    unsigned short i = 0;
-    Mob *cur_mobs = mobs;
-    for (; i<num_mobs; ++i) {
-        if (cur_mobs->hp == 0) {
-            memcpy(cur_mobs, cur_mobs + 1, sizeof(mobs) - (MAX_MOBS - i - 1) * sizeof(*mobs));
-            ++killed;
-        }
-        ++cur_mobs;
-    }
-
-    num_mobs -= killed;
-}
-
 void generate_mob(unsigned char mob_type, unsigned char x, unsigned char y)
 {
     if (num_mobs == MAP_SIZE) {

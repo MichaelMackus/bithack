@@ -42,6 +42,7 @@ void player_attack(Mob *target)
 void bump_player(unsigned char direction)
 {
     Mob *target;
+    unsigned char tile;
     unsigned char new_x = player.x;
     unsigned char new_y = player.y;
 
@@ -64,7 +65,8 @@ void bump_player(unsigned char direction)
             break;
     }
 
-    if (dungeon_tile_at(new_x, new_y) == MAP_WALL) {
+    tile = dungeon_tile_at(new_x, new_y);
+    if (tile == MAP_ROCK || tile == MAP_WALL) {
         return;
     }
 
