@@ -38,3 +38,6 @@ signed char mob_ac(unsigned char mob_type);
 
 // damage a mob
 void hurt(Mob *target, unsigned char damage);
+
+// move mob closer to point
+void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char target_y);

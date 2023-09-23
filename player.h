@@ -17,7 +17,7 @@ struct Player {
     unsigned char exp;
     unsigned char seen[MAP_SIZE];
     unsigned char thaco;
-    unsigned int x, y;
+    unsigned char x, y;
     Item *items; // max items?
 };
 typedef struct Player Player;
@@ -33,7 +33,13 @@ void change_player_dlevel(unsigned short x, unsigned short y);
 // get player tile symbol
 unsigned char player_tile();
 
+// player AC
+signed char player_ac();
+
 // bump player in a direction
 void bump_player(unsigned char direction);
+
+// damage a player
+void hurt_player(unsigned char damage);
 
 #endif

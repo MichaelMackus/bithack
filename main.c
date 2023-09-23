@@ -67,14 +67,11 @@ void title_screen()
     srand(seed);
 }
 
-// return dungeon or player tile at location
-unsigned short tile_at(unsigned char x, unsigned char y)
+void draw_status_line()
 {
-    if (player.x == x && player.y == y) {
-        return player_tile();
-    }
-
-    return dungeon_tile_at(x, y);
+    char message[MAP_COLS];
+    sprintf(message, "HP: %d/%d", player.hp, player.max_hp);
+    cputsxy(0, 23, message);
 }
 
 // TODO don't draw duplicate tiles, flashing on c64
@@ -121,19 +118,43 @@ void draw_tiles_player_can_see()
     // draw player
     add_to_draw_buffer(player.x, player.y, player_tile());
     render_buffer();
+}
 
-    // draw seen mobs
+// handle mob AI & draw seen mobs
+void mob_ai()
+{
+    unsigned short i;
     for (i=0; i<num_mobs; ++i) {
-        if (mobs[i].hp > 0 && can_see(player.x, player.y, mobs[i].x, mobs[i].y))
+        if (mobs[i].hp > 0 && can_see(mobs[i].x, mobs[i].y, player.x, player.y)) {
+            add_to_draw_buffer(mobs[i].x, mobs[i].y, dungeon_tiles[xy_to_idx(mobs[i].x, mobs[i].y)]); // TODO check seen tiles
+            move_or_attack_towards(&mobs[i], player.x, player.y);
             add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
+        }
     }
     render_buffer();
+}
+
+void draw_initial_scene()
+{
+    unsigned short i;
+    clrscr();
+    draw_tiles_player_can_see();
+    add_to_draw_buffer(player.x, player.y, player_tile());
+    render_buffer();
+    for (i=0; i<num_mobs; ++i) {
+        if (mobs[i].hp > 0 && can_see(player.x, player.y, mobs[i].x, mobs[i].y)) {
+            add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
+        }
+    }
+    render_buffer();
+    draw_status_line();
 }
 
 int main()
 {
     unsigned char input = 0;
     unsigned char quit = 0;
+    unsigned char lost = 0;
 
     init();
     title_screen();
@@ -141,15 +162,13 @@ int main()
     init_player();
     init_dungeon_tiles();
     init_mobs();
-    generate_dlevel();
 
-    clrscr();
-    draw_tiles_player_can_see();
-    add_to_draw_buffer(player.x, player.y, player_tile());
-    render_buffer();
+    // generate the level & draw it
+    generate_dlevel();
+    draw_initial_scene();
 
     // game loop
-    while (!quit) {
+    while (!quit && !lost) {
         // wait for vblank then render
         wait_for_vblank();
         // handle player input
@@ -192,15 +211,25 @@ int main()
                 if (dungeon_tile_at(player.x, player.y) == MAP_STAIR) {
                     // TODO increase depth/difficulty
                     generate_dlevel();
-                    clrscr();
-                    draw_tiles_player_can_see();
+                    draw_initial_scene();
                 }
                 break;
         }
         render_buffer();
+        // mob AI & render mobs
+        mob_ai();
+        // draw statusline
+        draw_status_line();
+
+        if (player.hp == 0)
+            lost = 1;
     }
 
     deinit();
+
+    if (lost) {
+        printf("You were killed!\n");
+    }
 
     return 0;
 }

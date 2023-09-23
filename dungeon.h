@@ -55,4 +55,8 @@ unsigned char *room_start(unsigned char x, unsigned char y);
 // can mob/player at xy see mob/player at x2/y2
 unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsigned char y2);
 
+// checks if target tile is passable - meaning, not a wall and no
+// mobs/player
+unsigned char is_passable(unsigned char x, unsigned char y);
+
 #endif

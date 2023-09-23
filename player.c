@@ -29,20 +29,25 @@ unsigned char player_tile()
     return 0; // @ on C64
 }
 
-void player_attack(Mob *target)
+void attack_mob(Mob *target)
 {
     signed char target_ac = mob_ac(target->type);
     unsigned char to_hit = rand() % 20 + 1;
     unsigned char damage = rand() % 6 + 1;
     if (to_hit >= player.thaco - target_ac)
         hurt(target, damage);
-    // TODO miss message
+    // TODO combat messages
+}
+
+signed char player_ac()
+{
+    // TODO check equipment
+    return 9;
 }
 
 void bump_player(unsigned char direction)
 {
     Mob *target;
-    unsigned char tile;
     unsigned char new_x = player.x;
     unsigned char new_y = player.y;
 
@@ -65,16 +70,19 @@ void bump_player(unsigned char direction)
             break;
     }
 
-    tile = dungeon_tile_at(new_x, new_y);
-    if (tile == MAP_ROCK || tile == MAP_WALL) {
-        return;
-    }
-
     target = mob_at(new_x, new_y);
     if (target) {
-        player_attack(target);
-    } else {
+        attack_mob(target);
+    } else if (is_passable(new_x, new_y)) {
         player.x = new_x;
         player.y = new_y;
     }
+}
+
+void hurt_player(unsigned char damage)
+{
+    if (player.hp > damage)
+        player.hp -= damage;
+    else
+        player.hp = 0;
 }

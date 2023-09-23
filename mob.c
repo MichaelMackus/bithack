@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "mob.h"
+#include "player.h"
 #include "dungeon.h"
 
 Mob mobs[MAX_MOBS];
@@ -97,10 +98,109 @@ signed char mob_ac(unsigned char mob_type)
     }
 }
 
+unsigned char mob_thaco(unsigned char mob_type)
+{
+    switch (mob_type) {
+        case MOB_GOBLIN:
+        case MOB_KOBOLD:
+        case MOB_ORC:
+            return 19;
+        case MOB_DRAGON:
+            return 11;
+        default:
+            // invalid mob
+            // TODO error
+            return 0;
+    }
+}
+
 void hurt(Mob *target, unsigned char damage)
 {
     if (target->hp > damage)
         target->hp -= damage;
     else
         target->hp = 0;
+}
+
+void attack_player(Mob *mob)
+{
+    signed char target_ac = player_ac();
+    unsigned char to_hit = rand() % 20 + 1;
+    unsigned char damage = rand() % 6 + 1;
+    if (to_hit >= mob_thaco(mob->type) - target_ac)
+        hurt_player(damage);
+    // TODO combat messages
+}
+
+void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char target_y)
+{
+    signed char offset_x = 0;
+    signed char offset_y = 0;
+    unsigned char diff_x = abs((signed char) mob->x - (signed char) target_x);
+    unsigned char diff_y = abs((signed char) mob->y - (signed char) target_y);
+    unsigned char new_x;
+    unsigned char new_y;
+
+    if (diff_y > diff_x) {
+        if (mob->y < target_y) {
+            offset_y = 1;
+        } else if (mob->y > target_y) {
+            offset_y = -1;
+        }
+    } else {
+        if (mob->x < target_x) {
+            offset_x = 1;
+        } else if (mob->x > target_x) {
+            offset_x = -1;
+        }
+    }
+
+    new_x = mob->x + offset_x;
+    new_y = mob->y + offset_y;
+
+    if (is_passable(new_x, new_y)) {
+        mob->x = new_x;
+        mob->y = new_y;
+
+        return;
+    }
+
+    if (player.x == new_x && player.y == new_y) {
+        attack_player(mob);
+
+        return;
+    }
+
+    if (offset_x != 0) {
+        if (mob->y < target_y) {
+            offset_y = 1;
+        } else if (mob->y > target_y) {
+            offset_y = -1;
+        }
+        offset_x = 0;
+    } else {
+        if (mob->x < target_x) {
+            offset_x = 1;
+        } else if (mob->x > target_x) {
+            offset_x = -1;
+        }
+        offset_y = 0;
+    }
+
+    new_x = mob->x + offset_x;
+    new_y = mob->y + offset_y;
+
+    if (is_passable(new_x, new_y)) {
+        mob->x = new_x;
+        mob->y = new_y;
+
+        return;
+    }
+
+    if (player.x == new_x && player.y == new_y) {
+        attack_player(mob);
+
+        return;
+    }
+
 }

@@ -1,4 +1,6 @@
 #include "dungeon.h"
+#include "player.h"
+#include "mob.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -82,6 +84,7 @@ unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsign
     unsigned short idx = xy_to_idx(x, y);
     unsigned short idx2 = xy_to_idx(x2, y2);
     unsigned char tile = dungeon_tiles[idx];
+    unsigned char tile2 = dungeon_tiles[idx2];
     unsigned char bsp_col, bsp_row, bsp2_col, bsp2_row, xdiff, ydiff;
 
     // always can see if we're next to square
@@ -91,7 +94,7 @@ unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsign
         return 1;
     }
 
-    if (!is_room(tile)) {
+    if (!is_room(tile) || !is_room(tile2)) {
         return 0;
     }
 
@@ -103,4 +106,17 @@ unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsign
     bsp2_row = bsp_y(y2);
 
     return bsp_col == bsp2_col && bsp_row == bsp2_row;
+}
+
+unsigned char is_passable(unsigned char x, unsigned char y)
+{
+    unsigned short idx = xy_to_idx(x, y);
+    /* Mob *mob = mob_at(x, y); */
+    Mob *mob = 0;
+
+    if (idx > MAP_SIZE)
+        return 0;
+
+    return (dungeon_tiles[idx] == MAP_ROOM || dungeon_tiles[idx] == MAP_STAIR || dungeon_tiles[idx] == MAP_DOOR || dungeon_tiles[idx] == MAP_CORRIDOR)
+            && !mob && !(player.x == x && player.y == y);
 }
