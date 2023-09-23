@@ -11,8 +11,8 @@
 
 #include "dungeon.h"
 #include "dungeon_generator.h"
-#include "player.h"
 #include "mob.h"
+#include "player.h"
 
 #define MAX_DRAW_BUFFER_SIZE 255
 
@@ -53,12 +53,11 @@ unsigned int seed;
 void title_screen()
 {
     int ch;
-    seed = 0;
     const char *title = "8bithack";
 
     cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
 
-    deinit();
+    seed = 0;
     while (1)
     {
         ++seed;
