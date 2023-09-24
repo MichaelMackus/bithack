@@ -1,10 +1,9 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 
 #ifdef PC
 #include "platform/pc.c"
+#elif defined(__NES__)
+#include "platform/nes.c"
 #else
 #include "platform/c64.c"
 #endif
@@ -56,7 +55,7 @@ void title_screen()
     const char *title = "bithack";
 
     clear_screen();
-    cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
+    /* cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title); */
 
     seed = 0;
     while (1)
@@ -71,9 +70,9 @@ void title_screen()
 
 void draw_status_line()
 {
-    char message[MAP_COLS];
-    sprintf(message, "HP: %d/%d", player.hp, player.max_hp);
-    cputsxy(0, 23, message);
+    /* char message[MAP_COLS]; */
+    /* sprintf(message, "HP: %d/%d", player.hp, player.max_hp); */
+    /* cputsxy(0, 23, message); */
 }
 
 // TODO don't draw duplicate tiles, flashing on c64
@@ -93,7 +92,6 @@ void draw_tiles_player_can_see()
         add_to_draw_buffer(player.x, player.y + 1, dungeon_tiles[idx + MAP_COLS]);
     if (player.y > 0)
         add_to_draw_buffer(player.x, player.y - 1, dungeon_tiles[idx - MAP_COLS]);
-    render_buffer();
 
     if (is_room(dungeon_tiles[idx])) {
         // draw lit room we're in
@@ -119,7 +117,6 @@ void draw_tiles_player_can_see()
 
     // draw player
     add_to_draw_buffer(player.x, player.y, player_tile());
-    render_buffer();
 }
 
 // handle mob AI & draw seen mobs
@@ -133,21 +130,23 @@ void mob_ai()
             add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
         }
     }
-    render_buffer();
 }
 
 void draw_initial_scene()
 {
     unsigned short i;
+    wait_for_vblank();
     clear_screen();
     draw_tiles_player_can_see();
     add_to_draw_buffer(player.x, player.y, player_tile());
+    wait_for_vblank();
     render_buffer();
     for (i=0; i<num_mobs; ++i) {
         if (mobs[i].hp > 0 && can_see(player.x, player.y, mobs[i].x, mobs[i].y)) {
             add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
         }
     }
+    wait_for_vblank();
     render_buffer();
     draw_status_line();
 }
@@ -159,7 +158,9 @@ int main()
     unsigned char lost = 0;
 
     init();
-    title_screen();
+    /* title_screen(); */
+
+    read_input();
 
     init_player();
     init_dungeon_tiles();
@@ -171,8 +172,6 @@ int main()
 
     // game loop
     while (!quit && !lost) {
-        // wait for vblank then render
-        wait_for_vblank();
         // handle player input
         do {
             input = read_input();
@@ -217,11 +216,13 @@ int main()
                 }
                 break;
         }
-        render_buffer();
         // mob AI & render mobs
         mob_ai();
         // draw statusline
         draw_status_line();
+        // render after vblank
+        wait_for_vblank();
+        render_buffer();
 
         if (player.hp == 0)
             lost = 1;
@@ -230,10 +231,10 @@ int main()
     deinit();
 
     if (lost) {
-        printf("You were killed!\n");
+        /* printf("You were killed!\n"); */
     }
 
-    printf("Seed: %d\n", seed);
+    /* printf("Seed: %d\n", seed); */
 
     return 0;
 }

@@ -3,7 +3,6 @@
 #include "mob.h"
 
 #include <stdlib.h>
-#include <assert.h>
 
 unsigned char dungeon_tiles[MAP_SIZE];
 unsigned char *dungeon_tiles_end;
@@ -75,8 +74,8 @@ unsigned char *room_start(unsigned char x, unsigned char y)
         cur_tile = start_tile;
     }
 
-    assert("ERROR: Unable to find start room!" == 0);
-    /* return dungeon_tiles_end - 2; // invalid start tile */
+    /* assert("ERROR: Unable to find start room!" == 0); */
+    return dungeon_tiles_end - 2; // invalid start tile
 }
 
 unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsigned char y2)

@@ -10,7 +10,7 @@
 
 .segment "BSS"
 
-_draw_buffer:      .res 255
+_draw_buffer:      .res 1000
 _draw_buffer_idx:  .byte 0
 
 .segment "CODE"

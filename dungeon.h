@@ -1,8 +1,14 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#if defined(__NES__)
+#define MAP_COLS 32
+#define MAP_ROWS 25
+#else
 #define MAP_COLS 40
 #define MAP_ROWS 21
+#endif
+
 #define MAP_SIZE MAP_COLS * MAP_ROWS
 #define MAX_ROOM_WIDTH  8
 #define MAX_ROOM_HEIGHT 4

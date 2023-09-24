@@ -23,7 +23,7 @@ class Tiles:
     def __iter__(self):
         for start_y in range(0, self.height, self.tile_height):
             for start_x in range(0, self.width, self.tile_width):
-                for y in range(start_y, start_y + self.tile_width):
+                for y in range(start_y, start_y + self.tile_height):
                     byte = 0
                     bit = 7
                     for x in range(start_x, start_x + self.tile_width):
@@ -44,4 +44,15 @@ if __name__ == "__main__":
     with open(filename.removesuffix('.png') + '.s', 'wb') as f:
         for byte in tiles:
             f.write(byte)
-    # TODO NES image format
+    # NES image format
+    with open(filename.removesuffix('.png') + '.nes.s', 'wb') as f:
+        char = []
+        for byte in tiles:
+            char.append(byte)
+            if len(char) == 8:
+                # NES format requires 16 bytes per tile
+                for b in char:
+                    f.write(b)
+                for b in char:
+                    f.write(b)
+                char = []

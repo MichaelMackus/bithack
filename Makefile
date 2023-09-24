@@ -5,12 +5,13 @@ MAKEFLAGS+= --no-builtin-rules
 
 rl:
 	make -f Makefile-gcc OBJS="main.o $(OBJS)" all
-
 rl.prg:
 	make -f Makefile-c64 OBJS="main.o $(OBJS)" all
+rl.nes:
+	make -f Makefile-nes OBJS="main.o $(OBJS)" all
 
 clean:
-	rm rl *.o rl.prg
+	rm rl *.o rl.prg rl.nes
 	rm test/*.o
 	rm $(TESTS)
 
