@@ -1,5 +1,4 @@
 OBJS = dungeon_generator.o dungeon.o player.o mob.o
-ASM_OBJS = init.o render.o input.o
 TEST_OBJS = test/dungeon_generation.o
 TESTS = test/dungeon_generation
 MAKEFLAGS+= --no-builtin-rules
@@ -8,7 +7,7 @@ rl:
 	make -f Makefile-gcc OBJS="main.o $(OBJS)" all
 
 rl.prg:
-	make -f Makefile-c64 OBJS="main.o $(ASM_OBJS) $(OBJS)" all
+	make -f Makefile-c64 OBJS="main.o $(OBJS)" all
 
 clean:
 	rm rl *.o rl.prg
