@@ -1,5 +1,5 @@
 OBJS = dungeon_generator.o dungeon.o player.o mob.o
-ASM_OBJS = math.o init.o input.o render.o
+ASM_OBJS = init.o render.o input.o
 TEST_OBJS = test/dungeon_generation.o
 TESTS = test/dungeon_generation
 MAKEFLAGS+= --no-builtin-rules
