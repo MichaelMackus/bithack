@@ -18,7 +18,7 @@ void deinit()
     endwin();
 }
 
-void clrscr()
+void clear_screen()
 {
     clear();
 }

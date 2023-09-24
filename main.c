@@ -25,7 +25,7 @@ extern unsigned char read_input();
 extern unsigned char *draw_buffer_ptr;
 extern unsigned char draw_buffer_idx;
 extern void cputsxy(unsigned char x, unsigned char y, const char *str);
-extern void clrscr();
+extern void clear_screen();
 extern unsigned char kbhit();
 
 void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
@@ -53,8 +53,9 @@ unsigned int seed;
 void title_screen()
 {
     int ch;
-    const char *title = "8bithack";
+    const char *title = "bithack";
 
+    clear_screen();
     cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
 
     seed = 0;
@@ -138,7 +139,7 @@ void mob_ai()
 void draw_initial_scene()
 {
     unsigned short i;
-    clrscr();
+    clear_screen();
     draw_tiles_player_can_see();
     add_to_draw_buffer(player.x, player.y, player_tile());
     render_buffer();
@@ -183,12 +184,12 @@ int main()
                 break;
             case 'r':
                 generate_dlevel();
-                clrscr();
+                clear_screen();
                 draw_tiles_player_can_see();
                 break;
             case 'R':
                 generate_dlevel();
-                clrscr();
+                clear_screen();
                 render_map(dungeon_tiles, dungeon_tiles_end);
                 draw_tiles_player_can_see();
                 break;

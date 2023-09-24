@@ -7,3 +7,8 @@ void deinit()
 {
     clrscr();
 }
+
+void clear_screen()
+{
+    clrscr();
+}

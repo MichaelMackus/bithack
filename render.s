@@ -20,7 +20,8 @@ _draw_buffer_idx:  .byte 0
     idx = ptr1
     ch  = ptr2
     ldx #0
-:   cpx _draw_buffer_idx
+loop:
+    cpx _draw_buffer_idx
     beq done ; if we are pointing to y we are done
     lda _draw_buffer, x
     sta ch
@@ -34,9 +35,47 @@ _draw_buffer_idx:  .byte 0
     add16 idx, SCREEN_RAM ; store the absolute address in screen ram into idx
     ; store the character into screen ram pointed to by idx
     lda ch
+    ; map characters to tiles
+    bne :+
+    lda #$64
+    jmp update
+:   cmp #'-'
+    bne :+
+    lda #$62
+    jmp update
+:   cmp #'.'
+    bne :+
+    lda #$61
+    jmp update
+:   cmp #'#'
+    bne :+
+    lda #$61
+    jmp update
+:   cmp #'>'
+    bne :+
+    lda #$66
+    jmp update
+:   cmp #'+'
+    bne :+
+    lda #$72
+    jmp update
+:   cmp #'g'
+    bne :+
+    lda #$63
+    jmp update
+:   cmp #'o'
+    bne :+
+    lda #$63
+    jmp update
+:   cmp #'k'
+    bne :+
+    lda #$63
+    jmp update
+:
+update:
     ldy #0
     sta (idx), y
-    jmp :-
+    jmp loop
 
 done:
     lda #0
@@ -69,7 +108,7 @@ done:
 
     ; loop through map, storing at SCREEN_RAM
 :   lda (map_ptr), y
-update:
+    ; update tiles
     sta (screen_ptr), y
     add16 map_ptr, 1
     add16 screen_ptr, 1

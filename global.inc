@@ -1,6 +1,6 @@
 CHROUT         = $FFD2
-SCREEN_RAM     = $0400
-SCREEN_RAM_END = $07e8
+SCREEN_RAM     = $C400
+CHAR_RAM       = $C800
 COLOR_RAM      = $D800
 MAP_COLS       = 40
 MAP_ROWS       = 20
