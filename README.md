@@ -20,3 +20,11 @@ clean` in between compiles (due to the different object file binaries).
 The PC version uses the gcc compiler. You should be able to compile on
 windows with something like pdcurses and MinGW (or perhaps something
 like Windows subsystem for linux) but this has not been tested.
+
+# License
+
+Everything is FOSS. All game code is licensed under MIT, graphics &
+tileset(s) are licensed under Creative Commons (BY).
+
+TLDR: you are free to use this work as you wish, but must attribute me
+via the license file(s) if you use any of the code or graphics.
