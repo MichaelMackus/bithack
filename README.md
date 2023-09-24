@@ -1,5 +1,7 @@
 # 8bithack
 
+![bithack](/res/screenshot.png?raw=true)
+
 Simple roguelike, with the goal of targetting multiple (mostly 8-bit)
 systems, such as: commodore 64, NES, and PC.
 
