@@ -15,7 +15,7 @@
 #define BSP_PADDING 2
 
 #define MAP_ROCK     0x20
-#define MAP_WALL     0x2d
+#define MAP_WALL     '-'
 #define MAP_ROOM     0x2E
 #define MAP_DOOR     0x2B
 #define MAP_CORRIDOR 0x23
