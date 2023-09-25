@@ -12,6 +12,8 @@ able to build with:
 
 `make rl`
 
+The 8-bit versions use the "cc65" compiler and assembler.
+
 To build the commodore 64 version, build with:
 
 `make rl.prg`
