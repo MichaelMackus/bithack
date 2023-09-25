@@ -16,6 +16,10 @@ To build the commodore 64 version, build with:
 
 `make rl.prg`
 
+To build the NES version, build with:
+
+`make rl.nes`
+
 Currently, if you want to build another target you'll have to do a `make
 clean` in between compiles (due to the different object file binaries).
 
