@@ -1,0 +1,18 @@
+ASM_OBJS = platform/nes/init.o platform/nes/render.o platform/nes/input.o
+CCFLAGS=-Osir -Cl -I./
+MAKEFLAGS+= --no-builtin-rules
+
+all: rl.nes
+
+rl.nes: $(OBJS) $(ASM_OBJS)
+	echo $(OBJS) $(ASM_OBJS)
+	ld65 -o rl.nes -t nes $(OBJS) $(ASM_OBJS) nes.lib
+
+%.s: %.c
+	cc65 $(CCFLAGS) -o $@ -t nes $<
+
+%.o: %.s
+	ca65 -t nes $< -o $@
+
+clean:
+	rm *.prg *.o
