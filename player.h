@@ -3,7 +3,6 @@
 
 #define PLAYER_MAX_ITEMS 26
 #define PLAYER_FOV 1
-#define PLAYER_TILE 0
 
 #define DIRECTION_UP    1
 #define DIRECTION_RIGHT 2

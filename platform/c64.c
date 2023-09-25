@@ -1,6 +1,9 @@
 #include <conio.h>
 
-#define MAX_DRAW_BUFFER_SIZE 1000
+#include "../dungeon.h"
+
+#define C64_SCREEN_RAM       0xC400
+#define MAX_DRAW_BUFFER_SIZE 256
 
 extern unsigned char draw_buffer;
 extern unsigned char draw_buffer_idx;
@@ -23,7 +26,8 @@ void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
         return;
     }
 
-    draw_buffer_ptr[draw_buffer_idx + 0] = ch;
+    idx += C64_SCREEN_RAM;
+    draw_buffer_ptr[draw_buffer_idx + 0] = tileset_index(ch);
     draw_buffer_ptr[draw_buffer_idx + 1] = idx & 0xFF;
     draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
     draw_buffer_idx += 3;

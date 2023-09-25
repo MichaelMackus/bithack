@@ -49,25 +49,6 @@ unsigned char kbhit()
         return ch;
 }
 
-unsigned char tile_to_ch(unsigned char tile) {
-    switch (tile) {
-        case MAP_ROOM:
-            return '.';
-        case MAP_CORRIDOR:
-            return '#';
-        case MAP_WALL:
-            return '-';
-        case MAP_ROCK:
-            return ' ';
-        case MAP_DOOR:
-            return '+';
-        case 0:
-            return '@';
-        default:
-            return tile;
-    }
-}
-
 void render_map(unsigned char *tiles_start, unsigned char *tiles_end)
 {
     unsigned char x, y;
@@ -75,7 +56,7 @@ void render_map(unsigned char *tiles_start, unsigned char *tiles_end)
     clear();
     for (x=0; x < MAP_COLS; ++x) {
         for (y=0; y < MAP_ROWS; ++y) {
-            mvaddch(y, x, tile_to_ch(dungeon_tiles[x + y*MAP_COLS]));
+            mvaddch(y, x, dungeon_tiles[x + y*MAP_COLS]);
         }
     }
 }
@@ -88,7 +69,7 @@ void render_buffer()
     while (i < draw_buffer_idx) {
         tile = draw_buffer_ptr[i];
         idx = (draw_buffer_ptr[i + 2] << 8) | draw_buffer_ptr[i + 1];
-        mvaddch(idx_to_y(idx), idx_to_x(idx), tile_to_ch(tile));
+        mvaddch(idx_to_y(idx), idx_to_x(idx), tile);
         i += 3;
     }
 

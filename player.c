@@ -25,7 +25,7 @@ void change_player_dlevel(unsigned short x, unsigned short y)
 
 unsigned char player_tile()
 {
-    return PLAYER_TILE; // @ on C64
+    return '@';
 }
 
 void attack_mob(Mob *target)

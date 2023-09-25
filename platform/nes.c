@@ -1,7 +1,7 @@
 #include "../dungeon.h"
 
 #define NES_NAMETABLE 0x2000
-#define MAX_DRAW_BUFFER_SIZE 1000
+#define MAX_DRAW_BUFFER_SIZE 256
 
 extern unsigned char draw_buffer;
 extern unsigned char draw_buffer_idx;

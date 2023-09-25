@@ -123,8 +123,6 @@ unsigned char is_passable(unsigned char x, unsigned char y)
 unsigned char tileset_index(unsigned char ch)
 {
     switch (ch) {
-        case PLAYER_TILE:
-            return 0x64;
         case MAP_WALL:
             return 0x62;
         case MAP_ROOM:
@@ -134,6 +132,10 @@ unsigned char tileset_index(unsigned char ch)
             return 0x66;
         case MAP_DOOR:
             return 0x72;
+        // player ASCII character
+        case '@':
+            return 0x64;
+        // enemy ASCII characters
         case 'g':
             return 0x63;
         case 'o':

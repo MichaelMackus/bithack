@@ -18,31 +18,22 @@ _draw_buffer_idx:  .byte 0
 
 ; render the draw buffer
 .proc _render_buffer
-    idx = ptr1
-    ch  = ptr2
-
     ldx #0
 loop:
     cpx _draw_buffer_idx
-    bne :+ ; if we are pointing to y we are done
+    bne update ; if we are pointing to _draw_buffer_idx we are done
     jmp done
-:   ;lda _draw_buffer, x
-    ; sta ch
-    ; inx
-    ;lda _draw_buffer, x
-    ; sta idx
-    ; inx
-    ;lda _draw_buffer, x
-    ; sta idx + 1
-    ; inx
-    ; store the character into screen ram pointed to by idx
 update:
+    ; PPU high byte is in draw_buffer + 2
     lda _draw_buffer + 2, x
     sta PPU_ADDR
+    ; PPU low byte is in draw_buffer + 1
     lda _draw_buffer + 1, x
     sta PPU_ADDR
+    ; character tile is in draw_buffer + 0
     lda _draw_buffer, x
     sta PPU_DATA
+    ; increment X for next iteration
     inx
     inx
     inx
