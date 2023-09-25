@@ -192,6 +192,7 @@ int main()
                 draw_tiles_player_can_see();
                 break;
             case '>':
+            case '\n':
                 if (dungeon_tile_at(player.x, player.y) == MAP_STAIR) {
                     // TODO increase depth/difficulty
                     generate_dlevel();
