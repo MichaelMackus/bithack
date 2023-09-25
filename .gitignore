@@ -1,3 +1,4 @@
 *.o
 *.prg
 *.nes
+res/*.s
