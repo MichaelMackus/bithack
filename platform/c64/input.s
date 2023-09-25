@@ -12,28 +12,28 @@ read_joystick:
     lda #%00000001
     bit $DC00 ; CIA #1 for joystick #2
     bne :+
-    lda #$4B ; up
+    lda #'k' ; up
     jmp done
 :   lda #%00000010
     bit $DC00 ; CIA #1 for joystick #2
     bne :+
-    lda #$4A ; down
+    lda #'j' ; down
     jmp done
 :   lda #%00000100
     bit $DC00 ; CIA #1 for joystick #2
     bne :+
-    lda #$48 ; left
+    lda #'h' ; left
     jmp done
 :   lda #%00001000
     bit $DC00 ; CIA #1 for joystick #2
     bne :+
-    lda #$4C ; right
+    lda #'l' ; right
     jmp done
-; :   lda #%00010000
-;     bit $DC00 ; CIA #1 for joystick #2
-;     bne :+
-;     lda #$4C ; TODO fire
-;     jmp done
+:   lda #%00010000
+    bit $DC00 ; CIA #1 for joystick #2
+    bne :+
+    lda #'i' ; fire
+    jmp done
 :   lda #0
 done:
     ldx #0

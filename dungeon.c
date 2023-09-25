@@ -119,3 +119,28 @@ unsigned char is_passable(unsigned char x, unsigned char y)
     return (dungeon_tiles[idx] == MAP_ROOM || dungeon_tiles[idx] == MAP_STAIR || dungeon_tiles[idx] == MAP_DOOR || dungeon_tiles[idx] == MAP_CORRIDOR)
             && !mob && !(player.x == x && player.y == y);
 }
+
+unsigned char tileset_index(unsigned char ch)
+{
+    switch (ch) {
+        case PLAYER_TILE:
+            return 0x64;
+        case MAP_WALL:
+            return 0x62;
+        case MAP_ROOM:
+        case MAP_CORRIDOR:
+            return 0x61;
+        case MAP_STAIR:
+            return 0x66;
+        case MAP_DOOR:
+            return 0x72;
+        case 'g':
+            return 0x63;
+        case 'o':
+            return 0x63;
+        case 'k':
+            return 0x63;
+    }
+
+    return ch;
+}

@@ -65,4 +65,7 @@ unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsign
 // mobs/player
 unsigned char is_passable(unsigned char x, unsigned char y);
 
+// returns the index in our graphic tileset for a given ascii character
+unsigned char tileset_index(unsigned char ch);
+
 #endif

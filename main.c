@@ -13,8 +13,6 @@
 #include "mob.h"
 #include "player.h"
 
-#define MAX_DRAW_BUFFER_SIZE 255
-
 extern void init();
 extern void deinit();
 extern void render_map(unsigned char *tiles_start, unsigned char *tiles_end);
@@ -25,20 +23,7 @@ extern unsigned char *draw_buffer_ptr;
 extern unsigned char draw_buffer_idx;
 extern void cputsxy(unsigned char x, unsigned char y, const char *str);
 extern void clear_screen();
-extern unsigned char kbhit();
-
-void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
-{
-    if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
-        // TODO error
-        return;
-    }
-
-    draw_buffer_ptr[draw_buffer_idx + 0] = ch;
-    draw_buffer_ptr[draw_buffer_idx + 1] = idx & 0xFF;
-    draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
-    draw_buffer_idx += 3;
-}
+extern void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch);
 
 void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
 {
@@ -61,7 +46,7 @@ void title_screen()
     while (1)
     {
         ++seed;
-        ch = kbhit();
+        ch = read_input();
         if (ch) break;
     }
 
@@ -158,9 +143,7 @@ int main()
     unsigned char lost = 0;
 
     init();
-    /* title_screen(); */
-
-    read_input();
+    title_screen();
 
     init_player();
     init_dungeon_tiles();
@@ -216,11 +199,14 @@ int main()
                 }
                 break;
         }
-        // mob AI & render mobs
+        // render player & tiles
+        wait_for_vblank();
+        render_buffer();
+        // mob AI
         mob_ai();
-        // draw statusline
-        draw_status_line();
-        // render after vblank
+        // TODO draw statusline
+        /* draw_status_line(); */
+        // render mobs after AI
         wait_for_vblank();
         render_buffer();
 

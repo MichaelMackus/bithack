@@ -1,6 +1,8 @@
 #include <curses.h>
 #include "../dungeon.h"
 
+#define MAX_DRAW_BUFFER_SIZE 1000
+
 unsigned char *draw_buffer_ptr;
 unsigned char draw_buffer_idx;
 
@@ -94,3 +96,17 @@ void render_buffer()
 }
 
 void wait_for_vblank() {}
+
+void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
+{
+    if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
+        // TODO error
+        return;
+    }
+
+    draw_buffer_ptr[draw_buffer_idx + 0] = ch;
+    draw_buffer_ptr[draw_buffer_idx + 1] = idx & 0xFF;
+    draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
+    draw_buffer_idx += 3;
+}
+
