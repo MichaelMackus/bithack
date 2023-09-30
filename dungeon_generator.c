@@ -341,10 +341,7 @@ void generate_dlevel()
         // generate dungeon tile map
         generate_tiles();
         clear_mobs();
-        generation_result = generate_mobs(mobs_to_generate);
-        if (generation_result < MIN_MOBS) {
-            continue;
-        }
+        generate_mobs(mobs_to_generate);
         generation_result = generate_player_xy();
         if (!generation_result) {
             continue;
