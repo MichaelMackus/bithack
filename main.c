@@ -97,9 +97,6 @@ int main()
                 break;
         }
 
-        // render player & tiles
-        wait_for_vblank();
-        render_buffer();
         // mob AI
         mob_ai();
         // update statusline (HP, etc.)
