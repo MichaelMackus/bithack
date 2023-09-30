@@ -81,8 +81,7 @@ unsigned char *room_start(unsigned char x, unsigned char y)
 void room_dimensions(const unsigned char *room_start, Rect *dimensions)
 {
     unsigned char x, y, bsp_offset_x, bsp_offset_y;
-    unsigned char *start_tile = dungeon_tiles + x + y*MAP_COLS;
-    const unsigned char *cur_tile = start_tile;
+    const unsigned char *cur_tile = room_start;
 
     if (room_start == dungeon_tiles_end - 2) {
         dimensions->x = dimensions->y = dimensions->w = dimensions->h = 0;
@@ -97,7 +96,6 @@ void room_dimensions(const unsigned char *room_start, Rect *dimensions)
     bsp_offset_y = dimensions->y - bsp_y(dimensions->y);
 
     // find w & h
-    cur_tile = room_start;
     for (x = bsp_offset_x; x<BSP_WIDTH; ++x) {
         if (!is_room(*cur_tile)) {
             break;
