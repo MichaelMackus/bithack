@@ -24,6 +24,16 @@
 
 #include "ctest/ctest.h"
 
+#ifdef PC
+#include "../platform/pc.c"
+#elif defined(__NES__)
+#include "../platform/nes.c"
+#else
+#include "../platform/c64.c"
+#endif
+
+unsigned int seed;
+
 int main(int argc, const char *argv[])
 {
     int result = ctest_main(argc, argv);
