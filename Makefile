@@ -12,8 +12,7 @@ rl.nes:
 	make -f Makefile-nes OBJS="main.o $(OBJS)" all
 
 clean:
-	rm rl *.o rl.prg rl.nes
-	rm test/*.o
+	rm rl *.o rl.prg rl.nes platform/**/*.o test/*.o || true
 	make -f Makefile-test clean
 
 test: FORCE
