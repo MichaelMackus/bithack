@@ -207,3 +207,13 @@ void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char targ
     }
 
 }
+
+unsigned char alive_mobs()
+{
+    unsigned char i = 0, alive = 0;
+    for (; i < num_mobs; ++i) {
+        if (mobs[i].hp > 0) ++alive;
+    }
+
+    return alive;
+}

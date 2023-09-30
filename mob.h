@@ -45,4 +45,7 @@ void hurt(Mob *target, unsigned char damage);
 // move mob closer to point
 void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char target_y);
 
+// returns amount of mobs that are alive
+unsigned char alive_mobs();
+
 #endif

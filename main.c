@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #ifdef PC
 #include "platform/pc.c"
@@ -31,12 +32,15 @@ void mob_ai()
 }
 
 unsigned int seed;
+unsigned int turn;
+
 int main()
 {
     unsigned char input = 0;
     unsigned char quit = 0;
     unsigned char lost = 0;
 
+    turn = 1;
     init();
     title_menu();
     srand(seed); // updated from title_menu
@@ -105,8 +109,15 @@ int main()
         wait_for_vblank();
         render_buffer();
 
+        // generate (offscreen) mobs every 10 turns
+        if (turn % 10 == 0 && alive_mobs() < NUM_MOBS_DUNGEON_CRAVES)
+            generate_offscreen_mobs(MIN_MOBS);
+
         if (player.hp == 0)
             lost = 1;
+
+        // increment turn counter
+        ++turn;
     }
 
     deinit();

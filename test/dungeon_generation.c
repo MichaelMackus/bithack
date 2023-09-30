@@ -41,6 +41,16 @@ CTEST2(dungeongen, testMobIsGenerated) {
     ASSERT_EQUAL(n, 1);
 }
 
+CTEST2(dungeongen, testOffscreenMobIsGenerated) {
+    int n = 0;
+    generate_dlevel();
+    clear_mobs();
+    while (n < 1) {
+        n = generate_offscreen_mobs(1);
+    }
+    ASSERT_EQUAL(n, num_mobs);
+    ASSERT_EQUAL(n, 1);
+}
 
 // TODO max mobs not working
 CTEST2_SKIP(dungeongen, testMaxMobsAreGenerated) {

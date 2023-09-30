@@ -277,6 +277,42 @@ unsigned char generate_mobs(unsigned char mobs_to_generate)
     return mobs_to_generate;
 }
 
+// TODO refactor
+unsigned char generate_offscreen_mobs(unsigned char mobs_to_generate)
+{
+    // generate mobs on level change
+    unsigned short idx;
+    unsigned char i, x, y, result;
+    unsigned char count = 0;
+
+    if (mobs_to_generate > MAX_MOBS)
+        mobs_to_generate = MAX_MOBS;
+
+    // generate some monsters
+    // TODO difficulty
+    for (i=0; i<mobs_to_generate; ++i) {
+        count = 0;
+        do {
+            idx = rand_room_idx();
+            if (idx == MAP_ERR) return i;
+            x = idx_to_x(idx);
+            y = idx_to_y(idx);
+            ++count;
+            if (count >= MAX_ITERATIONS) return i;
+        } while (!is_passable(x, y) && can_see(player.x, player.y, x, y));
+        result = rand() % 100;
+        if (result < 40) {
+            generate_mob(MOB_KOBOLD, x, y);
+        } else if (result < 75) {
+            generate_mob(MOB_GOBLIN, x, y);
+        } else {
+            generate_mob(MOB_ORC, x, y);
+        }
+    }
+
+    return mobs_to_generate;
+}
+
 unsigned char generate_player_xy()
 {
     unsigned short idx;
@@ -337,7 +373,7 @@ void generate_dlevel()
     unsigned char mobs_to_generate;
 
     while (1) {
-        mobs_to_generate = rand() % 11 + MIN_MOBS;
+        mobs_to_generate = rand() % (NUM_MOBS_DUNGEON_CRAVES - MIN_MOBS) + MIN_MOBS;
         // generate dungeon tile map
         generate_tiles();
         clear_mobs();
