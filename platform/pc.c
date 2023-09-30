@@ -13,6 +13,7 @@ void init()
     curs_set(0);
     noecho();
     draw_buffer_ptr = (unsigned char*) malloc(sizeof(*draw_buffer_ptr) * MAP_SIZE);
+    nodelay(stdscr, true);
 }
 
 void deinit()
@@ -32,16 +33,7 @@ void cputsxy(unsigned char x, unsigned char y, const char *str)
 
 unsigned char read_input()
 {
-    return getch();
-}
-
-unsigned char kbhit()
-{
-    int ch;
-
-    nodelay(stdscr, true);
-    ch = getch();
-    nodelay(stdscr, false);
+    int ch = getch();
 
     if (ch == ERR || ch > 255)
         return 0;
