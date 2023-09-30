@@ -220,10 +220,14 @@ int main()
     deinit();
 
     if (lost) {
-        /* printf("You were killed!\n"); */
+#ifndef __NES__
+        printf("You were killed!\n");
+#endif
     }
 
-    /* printf("Seed: %d\n", seed); */
+#ifndef __NES__
+    printf("Seed: %d\n", seed);
+#endif
 
     return 0;
 }
