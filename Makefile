@@ -1,4 +1,4 @@
-OBJS = dungeon_generator.o dungeon.o player.o mob.o
+OBJS = dungeon_generator.o dungeon.o player.o mob.o draw.o menu.o
 TEST_OBJS = test/dungeon_generation.o
 MAKEFLAGS+= --no-builtin-rules
 

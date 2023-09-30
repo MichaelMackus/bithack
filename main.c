@@ -12,99 +12,10 @@
 
 #include "dungeon.h"
 #include "dungeon_generator.h"
+#include "draw.h"
+#include "menu.h"
 #include "mob.h"
 #include "player.h"
-
-extern void init();
-extern void deinit();
-extern void render_map(unsigned char *tiles_start, unsigned char *tiles_end);
-extern void render_buffer();
-extern void wait_for_vblank();
-extern unsigned char read_input();
-extern unsigned char *draw_buffer_ptr;
-extern unsigned char draw_buffer_idx;
-extern void cputsxy(unsigned char x, unsigned char y, const char *str);
-extern void clear_screen();
-extern void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch);
-
-void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch)
-{
-    unsigned short idx;
-
-    idx = xy_to_idx(x, y);
-    add_to_draw_buffer_idx(idx, ch);
-}
-
-unsigned int seed;
-void title_screen()
-{
-    int ch;
-    const char *title = "bithack";
-
-    clear_screen();
-    cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
-
-    seed = 0;
-    while (1)
-    {
-        ++seed;
-        ch = read_input();
-        if (ch) break;
-    }
-
-    srand(seed);
-}
-
-void draw_status_line()
-{
-    char message[MAP_COLS];
-    sprintf(message, "HP: %d/%d", player.hp, player.max_hp);
-    cputsxy(0, 23, message);
-}
-
-// TODO don't draw duplicate tiles, flashing on c64
-void draw_tiles_player_can_see()
-{
-    unsigned char x, y;
-    unsigned char *room, *start;
-    unsigned short idx_start;
-    unsigned short idx = xy_to_idx(player.x, player.y);
-
-    // draw adjacent corridors TODO diagonals
-    if (player.x < MAP_COLS - 1)
-        add_to_draw_buffer(player.x + 1, player.y, dungeon_tiles[idx + 1]);
-    if (player.x > 0)
-        add_to_draw_buffer(player.x - 1, player.y, dungeon_tiles[idx - 1]);
-    if (player.y < MAP_ROWS - 1)
-        add_to_draw_buffer(player.x, player.y + 1, dungeon_tiles[idx + MAP_COLS]);
-    if (player.y > 0)
-        add_to_draw_buffer(player.x, player.y - 1, dungeon_tiles[idx - MAP_COLS]);
-
-    if (is_room(dungeon_tiles[idx])) {
-        // draw lit room we're in
-        x = bsp_x(player.x);
-        y = bsp_y(player.y);
-        room = room_start(x, y);
-        start = room;
-        
-        idx = room - dungeon_tiles;
-        idx_start = idx;
-        do {
-            do {
-                add_to_draw_buffer_idx(idx, *room);
-                ++room;
-                ++idx;
-            } while (is_room(*room));
-            start += MAP_COLS;
-            room = start;
-            idx_start += MAP_COLS;
-            idx = idx_start;
-        } while (is_room(*start));
-    }
-
-    // draw player
-    add_to_draw_buffer(player.x, player.y, player_tile());
-}
 
 // handle mob AI & draw seen mobs
 void mob_ai()
@@ -119,25 +30,7 @@ void mob_ai()
     }
 }
 
-void draw_initial_scene()
-{
-    unsigned short i;
-    wait_for_vblank();
-    clear_screen();
-    draw_tiles_player_can_see();
-    add_to_draw_buffer(player.x, player.y, player_tile());
-    wait_for_vblank();
-    render_buffer();
-    for (i=0; i<num_mobs; ++i) {
-        if (mobs[i].hp > 0 && can_see(player.x, player.y, mobs[i].x, mobs[i].y)) {
-            add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
-        }
-    }
-    wait_for_vblank();
-    render_buffer();
-    draw_status_line();
-}
-
+unsigned int seed;
 int main()
 {
     unsigned char input = 0;
@@ -145,7 +38,8 @@ int main()
     unsigned char lost = 0;
 
     init();
-    title_screen();
+    title_menu();
+    srand(seed); // updated from title_menu
 
     init_player();
     init_dungeon_tiles();
@@ -202,13 +96,14 @@ int main()
                 }
                 break;
         }
+
         // render player & tiles
         wait_for_vblank();
         render_buffer();
         // mob AI
         mob_ai();
-        // TODO draw statusline
-        /* draw_status_line(); */
+        // update statusline (HP, etc.)
+        draw_status_line();
         // render mobs after AI
         wait_for_vblank();
         render_buffer();
