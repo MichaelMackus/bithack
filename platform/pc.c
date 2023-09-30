@@ -14,6 +14,7 @@ void init()
     noecho();
     draw_buffer_ptr = (unsigned char*) malloc(sizeof(*draw_buffer_ptr) * MAP_SIZE);
     nodelay(stdscr, true);
+    keypad(stdscr, true);
 }
 
 void deinit()
@@ -35,10 +36,19 @@ unsigned char read_input()
 {
     int ch = getch();
 
-    if (ch == ERR || ch > 255)
+    if (ch == ERR)
         return 0;
-    else
-        return ch;
+
+    if (ch == KEY_UP)
+        return 'k';
+    if (ch == KEY_LEFT)
+        return 'h';
+    if (ch == KEY_RIGHT)
+        return 'l';
+    if (ch == KEY_DOWN)
+        return 'j';
+
+    return ch;
 }
 
 void render_map(unsigned char *tiles_start, unsigned char *tiles_end)
