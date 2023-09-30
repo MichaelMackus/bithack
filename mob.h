@@ -1,3 +1,6 @@
+#ifndef MOB_H
+#define MOB_H
+
 #define MAX_MOBS 100
 
 #define MOB_GOBLIN 1
@@ -41,3 +44,5 @@ void hurt(Mob *target, unsigned char damage);
 
 // move mob closer to point
 void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char target_y);
+
+#endif

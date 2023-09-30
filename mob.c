@@ -15,7 +15,7 @@ void init_mobs()
 void clear_mobs()
 {
     unsigned short i = 0;
-    for (; i<num_mobs; ++i) {
+    for (; i<MAX_MOBS; ++i) {
         mobs[i].hp = 0;
     }
     num_mobs = 0;
@@ -23,7 +23,7 @@ void clear_mobs()
 
 void generate_mob(unsigned char mob_type, unsigned char x, unsigned char y)
 {
-    if (num_mobs == MAP_SIZE) {
+    if (num_mobs == MAX_MOBS) {
         // TODO error - too many mobs
         return;
     }

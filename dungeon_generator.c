@@ -6,7 +6,6 @@
 #include <stdlib.h>
 
 #define MAX_ITERATIONS 20
-#define MIN_MOBS 5
 
 #define MAP_ERR MAP_SIZE+1
 
@@ -250,9 +249,13 @@ unsigned char generate_mobs(unsigned char mobs_to_generate)
     unsigned char i, x, y, result;
     unsigned char count = 0;
 
+    if (mobs_to_generate > MAX_MOBS)
+        mobs_to_generate = MAX_MOBS;
+
     // generate some monsters
     // TODO difficulty
     for (i=0; i<mobs_to_generate; ++i) {
+        count = 0;
         do {
             idx = rand_room_idx();
             if (idx == MAP_ERR) return i;
@@ -312,6 +315,7 @@ unsigned char generate_stair_xy()
     return 1;
 }
 
+// TODO we can make this faster with BSP lookup
 unsigned short rand_room_idx()
 {
     unsigned short idx;
@@ -338,9 +342,9 @@ void generate_dlevel()
         generate_tiles();
         clear_mobs();
         generation_result = generate_mobs(mobs_to_generate);
-        /* if (generation_result < MIN_MOBS) { */
-        /*     continue; */
-        /* } */
+        if (generation_result < MIN_MOBS) {
+            continue;
+        }
         generation_result = generate_player_xy();
         if (!generation_result) {
             continue;

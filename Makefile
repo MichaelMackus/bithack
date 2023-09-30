@@ -1,6 +1,5 @@
 OBJS = dungeon_generator.o dungeon.o player.o mob.o
 TEST_OBJS = test/dungeon_generation.o
-TESTS = test/dungeon_generation
 MAKEFLAGS+= --no-builtin-rules
 
 rl:
@@ -15,10 +14,12 @@ rl.nes:
 clean:
 	rm rl *.o rl.prg rl.nes
 	rm test/*.o
-	rm $(TESTS)
+	make -f Makefile-test clean
 
-test: $(TESTS)
-	make $(TESTS)
+test: FORCE
+	make -f Makefile-test OBJS="$(OBJS)" remake && test/test
+
+FORCE: ;
 
 $(TESTS): $(TEST_OBJS) $(OBJS)
 	ld65 -o $@ -t c64 $(TEST_OBJS) $(OBJS) c64.lib

@@ -28,7 +28,7 @@ extern Player player;
 void init_player();
 
 // initialize player at start of dungeon level
-void change_player_dlevel(unsigned short x, unsigned short y);
+void change_player_dlevel(unsigned char x, unsigned char y);
 
 // get player tile symbol
 unsigned char player_tile();

@@ -1,0 +1,17 @@
+CCFLAGS=-Wall -Wextra -Wconversion -Wredundant-decls -Wshadow -Wno-unused-parameter -O3 -D=PC
+LDFLAGS=-lcurses
+CC=clang
+CXX=clang++
+
+all: test/test
+
+remake: clean all
+
+%.o: %.c
+	$(CC) $(CCFLAGS) $< -c -o $@
+
+test/test: test/main.o test/ctest/ctest.h test/dungeon_generation.o test/dungeon.c $(OBJS)
+	$(CC) $(LDFLAGS) test/main.o test/dungeon_generation.o test/dungeon.c $(OBJS) -o test/test
+
+clean:
+	rm -f test/test test/*.o *.o

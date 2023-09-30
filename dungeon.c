@@ -9,10 +9,14 @@ unsigned char *dungeon_tiles_end;
 
 void init_dungeon_tiles()
 {
+    unsigned short i;
     dungeon_tiles_end = &dungeon_tiles[0]  +  sizeof(*dungeon_tiles) * MAP_SIZE;
+    for (i=0; i<MAP_SIZE; ++i) {
+        dungeon_tiles[i] = MAP_ROCK;
+    }
 }
 
-unsigned short dungeon_tile_at(unsigned char x, unsigned char y)
+unsigned char dungeon_tile_at(unsigned char x, unsigned char y)
 {
     unsigned short idx;
 
@@ -41,16 +45,12 @@ unsigned char idx_to_y(unsigned short idx)
 
 unsigned char bsp_x(unsigned char x)
 {
-    unsigned char w = BSP_WIDTH;
-
-    return x - (x % w);
+    return x - (x % BSP_WIDTH);
 }
 
 unsigned char bsp_y(unsigned char y)
 {
-    unsigned char h = BSP_HEIGHT;
-
-    return y - (y % h);
+    return y - (y % BSP_HEIGHT);
 }
 
 unsigned char is_room(unsigned char tile)
@@ -76,6 +76,53 @@ unsigned char *room_start(unsigned char x, unsigned char y)
 
     /* assert("ERROR: Unable to find start room!" == 0); */
     return dungeon_tiles_end - 2; // invalid start tile
+}
+
+void room_dimensions(const unsigned char *room_start, Rect *dimensions)
+{
+    unsigned char x, y, bsp_offset_x, bsp_offset_y;
+    unsigned char *start_tile = dungeon_tiles + x + y*MAP_COLS;
+    const unsigned char *cur_tile = start_tile;
+
+    if (room_start == dungeon_tiles_end - 2) {
+        dimensions->x = dimensions->y = dimensions->w = dimensions->h = 0;
+        return;
+    }
+
+    dimensions->x = idx_to_x(room_start - dungeon_tiles);
+    dimensions->y = idx_to_y(room_start - dungeon_tiles);
+    dimensions->w = 0;
+    dimensions->h = 0;
+    bsp_offset_x = dimensions->x - bsp_x(dimensions->x);
+    bsp_offset_y = dimensions->y - bsp_y(dimensions->y);
+
+    // find w & h
+    cur_tile = room_start;
+    for (x = bsp_offset_x; x<BSP_WIDTH; ++x) {
+        if (!is_room(*cur_tile)) {
+            break;
+        }
+        ++dimensions->w;
+        ++cur_tile;
+    }
+    if (is_room(*cur_tile)) {
+        // ERROR: Unable to find start room!
+        dimensions->x = dimensions->y = dimensions->w = dimensions->h = 0;
+        return;
+    }
+
+    cur_tile = room_start;
+    for (y = bsp_offset_y; y<BSP_HEIGHT; ++y) {
+        if (!is_room(*cur_tile)) {
+            break;
+        }
+        cur_tile += MAP_COLS;
+        ++dimensions->h;
+    }
+    if (is_room(*cur_tile)) {
+        // ERROR: Unable to find start room!
+        dimensions->x = dimensions->y = dimensions->w = dimensions->h = 0;
+    }
 }
 
 unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsigned char y2)

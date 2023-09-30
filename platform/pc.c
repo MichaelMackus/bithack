@@ -12,7 +12,7 @@ void init()
     cbreak();
     curs_set(0);
     noecho();
-    draw_buffer_ptr = malloc(sizeof(*draw_buffer_ptr) * MAP_SIZE);
+    draw_buffer_ptr = (unsigned char*) malloc(sizeof(*draw_buffer_ptr) * MAP_SIZE);
 }
 
 void deinit()

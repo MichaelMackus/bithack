@@ -16,9 +16,11 @@
 #define MIN_ROOM_HEIGHT 3
 #define ROOMS_PER_ROW 3
 #define ROOMS_PER_COL 3
-#define BSP_WIDTH  MAP_COLS/ROOMS_PER_ROW
-#define BSP_HEIGHT MAP_ROWS/ROOMS_PER_COL
 #define BSP_PADDING 2
+#define BSP_SIZE ROOMS_PER_ROW*ROOMS_PER_COL
+
+static unsigned char BSP_WIDTH  = MAP_COLS/ROOMS_PER_ROW;
+static unsigned char BSP_HEIGHT = MAP_ROWS/ROOMS_PER_COL;
 
 #define MAP_ROCK     ' '
 #define MAP_WALL     '-'
@@ -30,11 +32,20 @@
 extern unsigned char dungeon_tiles[MAP_SIZE];
 extern unsigned char *dungeon_tiles_end;
 
+// for room dimensions
+struct Rect {
+    unsigned char x;
+    unsigned char y;
+    unsigned char w;
+    unsigned char h;
+};
+typedef struct Rect Rect;
+
 // initialize our dungeon tiles array
 void init_dungeon_tiles();
 
 // returns tile at xy position
-unsigned short dungeon_tile_at(unsigned char x, unsigned char y);
+unsigned char dungeon_tile_at(unsigned char x, unsigned char y);
 
 // XY to index
 unsigned short xy_to_idx(unsigned char x, unsigned char y);
@@ -55,8 +66,13 @@ unsigned char bsp_y(unsigned char y);
 unsigned char is_room(unsigned char tile);
 
 // get start tile for the room in the current BSP cell
-// NOTE: use bsp_x() and bsp_y() function first to get the proper args
+// NOTE: use bsp_x() and bsp_y() function first to get the proper X/Y args
 unsigned char *room_start(unsigned char x, unsigned char y);
+
+// get start tile of room in given BSP cell, and also updates rect with the x, y and dimensions
+// it is assumed the passed rect arg has all members initialized to 0
+// NOTE: use bsp_x() and bsp_y() function first to get the proper X/Y args
+void room_dimensions(const unsigned char *room_start, Rect *dimensions);
 
 // can mob/player at xy see mob/player at x2/y2
 unsigned char can_see(unsigned char x, unsigned char y, unsigned char x2, unsigned char y2);

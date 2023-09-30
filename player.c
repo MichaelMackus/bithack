@@ -17,7 +17,7 @@ void init_player()
     }
 }
 
-void change_player_dlevel(unsigned short x, unsigned short y)
+void change_player_dlevel(unsigned char x, unsigned char y)
 {
     player.x = x;
     player.y = y;
