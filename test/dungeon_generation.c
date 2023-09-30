@@ -30,6 +30,18 @@ CTEST2(dungeongen, testThingsAreInitialized) {
     ASSERT_EQUAL(player.exp, 0);
 }
 
+CTEST2(dungeongen, testMobIsGenerated) {
+    int n = 0;
+    generate_dlevel();
+    clear_mobs();
+    while (n < 1) {
+        n = generate_mobs(1);
+    }
+    ASSERT_EQUAL(n, num_mobs);
+    ASSERT_EQUAL(n, 1);
+}
+
+
 // TODO max mobs not working
 CTEST2_SKIP(dungeongen, testMaxMobsAreGenerated) {
     int n = 0;
