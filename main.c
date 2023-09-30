@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 #ifdef PC
 #include "platform/pc.c"
@@ -40,7 +42,7 @@ void title_screen()
     const char *title = "bithack";
 
     clear_screen();
-    /* cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title); */
+    cputsxy(MAP_COLS/2 - strlen(title)/2, MAP_ROWS/2, title);
 
     seed = 0;
     while (1)
@@ -55,9 +57,9 @@ void title_screen()
 
 void draw_status_line()
 {
-    /* char message[MAP_COLS]; */
-    /* sprintf(message, "HP: %d/%d", player.hp, player.max_hp); */
-    /* cputsxy(0, 23, message); */
+    char message[MAP_COLS];
+    sprintf(message, "HP: %d/%d", player.hp, player.max_hp);
+    cputsxy(0, 23, message);
 }
 
 // TODO don't draw duplicate tiles, flashing on c64
