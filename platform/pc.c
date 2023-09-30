@@ -1,7 +1,7 @@
 #include <curses.h>
 #include "../dungeon.h"
 
-#define MAX_DRAW_BUFFER_SIZE 1000
+#define MAX_DRAW_BUFFER_SIZE MAP_SIZE * sizeof(int)
 
 unsigned char *draw_buffer_ptr;
 unsigned char draw_buffer_idx;
@@ -12,7 +12,7 @@ void init()
     cbreak();
     curs_set(0);
     noecho();
-    draw_buffer_ptr = (unsigned char*) malloc(sizeof(*draw_buffer_ptr) * MAP_SIZE);
+    draw_buffer_ptr = (unsigned char*) malloc(MAX_DRAW_BUFFER_SIZE);
     nodelay(stdscr, true);
     keypad(stdscr, true);
 }
