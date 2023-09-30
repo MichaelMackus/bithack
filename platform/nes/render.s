@@ -17,6 +17,10 @@ _draw_buffer_idx:  .byte 0
 .segment "CODE"
 
 ; render the draw buffer
+;
+; NOTE I only have max of ~2250 cycles here before graphical corruption
+; NOTE on (very) rough calculation, each loop should take ~35 cycles currently (should be enough to draw our max room size in 1 frame)
+; NOTE see: https://www.nesdev.org/wiki/The_frame_and_NMIs
 .proc _render_buffer
     ldx #0
 loop:
