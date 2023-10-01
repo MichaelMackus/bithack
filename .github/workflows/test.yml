@@ -12,15 +12,13 @@ jobs:
         shell: bash
 
     steps:
+      - name: Checkout repository and submodules
+          uses: actions/checkout@v2
+          with:
+            submodules: recursive
       - run: |
           sudo apt update
           sudo apt install libncurses-dev gcc clang make -y
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master
-        with:
-          remote: true
       - name: Run CTest
         run: |
           make test
