@@ -125,6 +125,14 @@ void hurt(Mob *target, unsigned char damage)
         target->hp = 0;
 }
 
+void heal(Mob *target, unsigned char amount)
+{
+    if (target->hp + amount < target->max_hp)
+        target->hp += amount;
+    else
+        target->hp = target->max_hp;
+}
+
 void attack_player(Mob *mob)
 {
     signed char target_ac = player_ac();

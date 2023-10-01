@@ -101,6 +101,9 @@ int main()
                 break;
         }
 
+        // attempt to rest every turn
+        try_rest();
+
         // mob AI
         mob_ai();
         // update statusline (HP, etc.)

@@ -87,3 +87,24 @@ void hurt_player(unsigned char damage)
     else
         player.hp = 0;
 }
+
+void try_rest()
+{
+    unsigned short i;
+    for (i=0; i<num_mobs; ++i) {
+        if (can_see(mobs[i].x, mobs[i].y, player.x, player.y)) {
+            return;
+        }
+    }
+    for (i=0; i<num_mobs; ++i) {
+        heal(&mobs[i], 1);
+    }
+
+    i = xy_to_idx(player.x, player.y);
+    if (!is_room(dungeon_tiles[i]) || dungeon_tiles[i] == MAP_DOOR) {
+        return;
+    }
+
+    if (player.hp < player.max_hp)
+        player.hp += 1;
+}
