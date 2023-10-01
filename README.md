@@ -1,5 +1,7 @@
 # 8bithack
 
+![test status](https://github.com/MichaelMackus/bithack/actions/workflows/test.yml/badge.svg)
+
 ![bithack](/res/screenshot.png?raw=true)
 
 Simple roguelike, with the goal of targetting multiple (mostly 8-bit)
