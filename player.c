@@ -92,12 +92,14 @@ void try_rest()
 {
     unsigned short i;
     for (i=0; i<num_mobs; ++i) {
-        if (can_see(mobs[i].x, mobs[i].y, player.x, player.y)) {
+        if (mobs[i].hp > 0 && can_see(mobs[i].x, mobs[i].y, player.x, player.y)) {
             return;
         }
     }
     for (i=0; i<num_mobs; ++i) {
-        heal(&mobs[i], 1);
+        if (mobs[i].hp > 0) {
+            heal(&mobs[i], 1);
+        }
     }
 
     i = xy_to_idx(player.x, player.y);
