@@ -1,0 +1,26 @@
+name: 'Test Bithack'
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - run: |
+          sudo apt update
+          sudo apt install libncurses-dev gcc clang make -y
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@master
+        with:
+          remote: true
+      - name: Run CTest
+        run: |
+          make test
