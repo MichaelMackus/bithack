@@ -30,38 +30,37 @@ CTEST2(dungeongen, testThingsAreInitialized) {
     ASSERT_EQUAL(player.exp, 0);
 }
 
-CTEST2(dungeongen, testMobIsGenerated) {
+CTEST2(dungeongen, testMinMobsAreGenerated) {
     int n = 0;
     generate_dlevel();
-    clear_mobs();
-    while (n < 1) {
-        n = generate_mobs(1);
+    while (n < MIN_MOBS) {
+        clear_mobs();
+        n = generate_mobs(MIN_MOBS);
     }
     ASSERT_EQUAL(n, num_mobs);
-    ASSERT_EQUAL(n, 1);
+    ASSERT_EQUAL(n, MIN_MOBS);
 }
 
 CTEST2(dungeongen, testOffscreenMobIsGenerated) {
     int n = 0;
     generate_dlevel();
-    clear_mobs();
-    while (n < 1) {
-        n = generate_offscreen_mobs(1);
+    while (n < MIN_MOBS) {
+        clear_mobs();
+        n = generate_offscreen_mobs(MIN_MOBS);
     }
     ASSERT_EQUAL(n, num_mobs);
-    ASSERT_EQUAL(n, 1);
+    ASSERT_EQUAL(n, MIN_MOBS);
 }
 
-// TODO max mobs not working
-CTEST2_SKIP(dungeongen, testMaxMobsAreGenerated) {
+CTEST2(dungeongen, testMaxMobsAreGenerated) {
     int n = 0;
     generate_dlevel();
-    clear_mobs();
-    while (n < MAX_MOBS - 1) {
-        n = generate_mobs(MAX_MOBS - 1);
+    while (n < NUM_MOBS_DUNGEON_CRAVES) {
+        clear_mobs();
+        n = generate_mobs(NUM_MOBS_DUNGEON_CRAVES);
     }
     ASSERT_EQUAL(n, num_mobs);
-    ASSERT_EQUAL(n, MAX_MOBS);
+    ASSERT_EQUAL(n, NUM_MOBS_DUNGEON_CRAVES);
 }
 
 CTEST2(dungeongen, testPlayerXYIsRoom) {
