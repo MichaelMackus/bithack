@@ -112,8 +112,8 @@ int main()
         wait_for_vblank();
         render_buffer();
 
-        // generate (offscreen) mobs every 10 turns
-        if (turn % 10 == 0 && alive_mobs() < NUM_MOBS_DUNGEON_CRAVES)
+        // chance to generate (offscreen) mobs every 10 turns
+        if (turn % 10 == 0 && alive_mobs() < NUM_MOBS_DUNGEON_CRAVES && rand() % 6 == 0)
             generate_offscreen_mobs(MIN_MOBS);
 
         if (player.hp == 0)
