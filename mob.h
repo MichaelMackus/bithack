@@ -42,6 +42,9 @@ signed char mob_ac(unsigned char mob_type);
 // damage a mob
 void hurt(Mob *target, unsigned char damage);
 
+// heal a mob
+void heal(Mob *target, unsigned char amount);
+
 // move mob closer to point
 void move_or_attack_towards(Mob *mob, unsigned char target_x, unsigned char target_y);
 

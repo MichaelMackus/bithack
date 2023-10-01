@@ -42,4 +42,7 @@ void bump_player(unsigned char direction);
 // damage a player
 void hurt_player(unsigned char damage);
 
+// try resting - can only rest in a room without mobs nearby
+void try_rest();
+
 #endif
