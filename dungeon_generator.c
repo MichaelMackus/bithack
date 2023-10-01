@@ -351,20 +351,21 @@ unsigned char generate_stair_xy()
     return 1;
 }
 
-// TODO we can make this faster with BSP lookup
+// TODO make this a bit smarter by picking random sequential passable tile
 unsigned short rand_room_idx()
 {
     unsigned short idx;
     unsigned char count = 0;
 
-    do
-    {
-        idx = rand() % MAP_SIZE;
-        ++count;
-        if (count >= MAX_ITERATIONS) return MAP_ERR;
-    } while (dungeon_tiles[idx] != MAP_ROOM || !is_passable(idx_to_x(idx), idx_to_y(idx)));
+    // loop through map to find passable tile
+    idx = rand() % MAP_SIZE;
+    for (; idx < MAP_SIZE; ++ idx) {
+        if (dungeon_tiles[idx] == MAP_ROOM && is_passable(idx_to_x(idx), idx_to_y(idx))) {
+            return idx;
+        }
+    }
 
-    return idx;
+    return MAP_ERR;
 }
 
 void generate_dlevel()
