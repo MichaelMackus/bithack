@@ -29,6 +29,7 @@ static unsigned char BSP_HEIGHT = MAP_ROWS/ROOMS_PER_COL;
 #define MAP_CORRIDOR '#'
 #define MAP_STAIR    '>'
 
+extern unsigned char dungeon_depth; // current dungeon difficulty/depth
 extern unsigned char dungeon_tiles[MAP_SIZE];
 extern unsigned char *dungeon_tiles_end;
 

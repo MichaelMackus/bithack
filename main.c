@@ -94,7 +94,7 @@ int main()
             case '>':
             case '\n':
                 if (dungeon_tile_at(player.x, player.y) == MAP_STAIR) {
-                    // TODO increase depth/difficulty
+                    ++dungeon_depth;
                     generate_dlevel();
                     draw_initial_scene();
                 }

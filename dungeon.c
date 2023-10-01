@@ -6,10 +6,12 @@
 
 unsigned char dungeon_tiles[MAP_SIZE];
 unsigned char *dungeon_tiles_end;
+unsigned char dungeon_depth;
 
 void init_dungeon_tiles()
 {
     unsigned short i;
+    dungeon_depth = 1;
     dungeon_tiles_end = &dungeon_tiles[0]  +  sizeof(*dungeon_tiles) * MAP_SIZE;
     for (i=0; i<MAP_SIZE; ++i) {
         dungeon_tiles[i] = MAP_ROCK;
