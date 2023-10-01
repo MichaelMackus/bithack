@@ -106,8 +106,12 @@ int main()
 
         // mob AI
         mob_ai();
+        wait_for_vblank();
+        render_buffer();
         // update statusline (HP, etc.)
         draw_status_line();
+        wait_for_vblank();
+        render_buffer();
         // render mobs after AI
         wait_for_vblank();
         render_buffer();
