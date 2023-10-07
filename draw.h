@@ -1,13 +1,13 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#define GAME_COLOR_DARK   0
-#define GAME_COLOR_WHITE  1
-#define GAME_COLOR_GREY   2
-#define GAME_COLOR_BROWN  3
-#define GAME_COLOR_GREEN  4
-#define GAME_COLOR_YELLOW 5
-#define GAME_COLOR_RED    6
+#define GAME_COLOR_DARK   1
+#define GAME_COLOR_WHITE  2
+#define GAME_COLOR_GREY   3
+#define GAME_COLOR_BROWN  4
+#define GAME_COLOR_GREEN  5
+#define GAME_COLOR_YELLOW 6
+#define GAME_COLOR_RED    7
 
 extern void init();
 extern void deinit();

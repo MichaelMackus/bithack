@@ -19,9 +19,10 @@ void init()
 
     // init curses colors
     start_color();
-    init_pair(GAME_COLOR_DARK,   COLOR_BLACK,           COLOR_BLACK);
+    use_default_colors();
+    init_pair(GAME_COLOR_DARK,   -2,                    -1);
     init_pair(GAME_COLOR_WHITE,  COLOR_WHITE,           COLOR_BLACK);
-    init_pair(GAME_COLOR_GREY,   COLOR_WHITE,           COLOR_BLACK);
+    init_pair(GAME_COLOR_GREY,   -4,                    COLOR_BLACK);
     init_pair(GAME_COLOR_BROWN,  COLOR_YELLOW | A_BOLD, COLOR_BLACK);
     init_pair(GAME_COLOR_GREEN,  COLOR_GREEN,           COLOR_BLACK);
     init_pair(GAME_COLOR_YELLOW, COLOR_YELLOW,          COLOR_BLACK);
