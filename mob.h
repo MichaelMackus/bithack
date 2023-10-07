@@ -33,6 +33,9 @@ void generate_mob(unsigned char mob_type, unsigned char x, unsigned char y);
 // get tile for mob
 unsigned char mob_tile(unsigned char mob_type);
 
+// get color for mob
+unsigned char mob_color(unsigned char mob_type);
+
 // get mob at xy
 Mob *mob_at(unsigned char x, unsigned char y);
 

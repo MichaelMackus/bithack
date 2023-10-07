@@ -28,6 +28,15 @@ void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
     draw_buffer_idx += 3;
 }
 
+// TODO color (perhaps use sprites?)
+void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsigned char color)
+{
+    unsigned short idx;
+
+    idx = xy_to_idx(x, y);
+    add_to_draw_buffer_idx(idx, ch);
+}
+
 void cputsxy(unsigned char x, unsigned char y, const char *str)
 {
     unsigned char ch;

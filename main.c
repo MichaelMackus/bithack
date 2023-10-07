@@ -21,12 +21,16 @@
 // handle mob AI & draw seen mobs
 void mob_ai()
 {
+    unsigned char x, y;
     unsigned short i;
     for (i=0; i<num_mobs; ++i) {
         if (mobs[i].hp > 0 && can_see(mobs[i].x, mobs[i].y, player.x, player.y)) {
-            add_to_draw_buffer(mobs[i].x, mobs[i].y, dungeon_tiles[xy_to_idx(mobs[i].x, mobs[i].y)]); // TODO check seen tiles
+            x = mobs[i].x;
+            y = mobs[i].y;
             move_or_attack_towards(&mobs[i], player.x, player.y);
-            add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type));
+            if (x != mobs[i].x || y != mobs[i].y)
+                add_to_draw_buffer(x, y, dungeon_tiles[xy_to_idx(x, y)], GAME_COLOR_WHITE);
+            add_to_draw_buffer(mobs[i].x, mobs[i].y, mob_tile(mobs[i].type), mob_color(mobs[i].type));
         }
     }
 }

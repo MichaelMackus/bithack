@@ -3,6 +3,7 @@
 #include "mob.h"
 #include "player.h"
 #include "dungeon.h"
+#include "draw.h"
 
 Mob mobs[MAX_MOBS];
 unsigned short num_mobs;
@@ -68,6 +69,24 @@ unsigned char mob_tile(unsigned char mob_type)
             // invalid mob
             // TODO error
             return '\0';
+    }
+}
+
+unsigned char mob_color(unsigned char mob_type)
+{
+    switch (mob_type) {
+        case MOB_GOBLIN:
+            return GAME_COLOR_GREEN;
+        case MOB_KOBOLD:
+            return GAME_COLOR_RED;
+        case MOB_ORC:
+            return GAME_COLOR_YELLOW;
+        case MOB_DRAGON:
+            return GAME_COLOR_RED;
+        default:
+            // invalid mob
+            // TODO error
+            return GAME_COLOR_WHITE;
     }
 }
 

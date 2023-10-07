@@ -19,8 +19,12 @@ void clear_screen()
     clrscr();
 }
 
-void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
+void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsigned char color)
 {
+    unsigned short idx;
+
+    idx = xy_to_idx(x, y);
+
     if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
         // TODO error
         return;
@@ -32,4 +36,3 @@ void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch)
     draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
     draw_buffer_idx += 3;
 }
-
