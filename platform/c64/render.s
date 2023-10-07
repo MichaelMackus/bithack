@@ -19,6 +19,7 @@ _draw_buffer_idx:  .byte 0
 .proc _render_buffer
     idx = ptr1
     ch  = ptr2
+    color_idx = ptr3
     ldx #0
     ldy #0
 loop:
@@ -29,13 +30,21 @@ loop:
     inx
     lda _draw_buffer, x
     sta idx
+    sta color_idx
     inx
     lda _draw_buffer, x
     sta idx + 1
+    sta color_idx + 1
     inx
-    lda ch
-update:
+    ; add color ram offset to idx & store color
+    add16 color_idx, COLOR_RAM
+    lda _draw_buffer, x
+    sta (color_idx), y
+    inx
+    ; add screen ram offset to idx
+    add16 idx, SCREEN_RAM
     ; store the character into screen ram pointed to by idx
+    lda ch
     sta (idx), y
     jmp loop
 

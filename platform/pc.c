@@ -1,5 +1,6 @@
 #include <curses.h>
 #include "../dungeon.h"
+#include "../draw.h"
 
 #define MAX_DRAW_BUFFER_SIZE MAP_SIZE * sizeof(int)
 
@@ -15,10 +16,21 @@ void init()
     draw_buffer_ptr = (unsigned char*) malloc(MAX_DRAW_BUFFER_SIZE);
     nodelay(stdscr, true);
     keypad(stdscr, true);
+
+    // init curses colors
+    start_color();
+    init_pair(GAME_COLOR_DARK,   COLOR_BLACK,           COLOR_BLACK);
+    init_pair(GAME_COLOR_WHITE,  COLOR_WHITE,           COLOR_BLACK);
+    init_pair(GAME_COLOR_GREY,   COLOR_WHITE,           COLOR_BLACK);
+    init_pair(GAME_COLOR_BROWN,  COLOR_YELLOW | A_BOLD, COLOR_BLACK);
+    init_pair(GAME_COLOR_GREEN,  COLOR_GREEN,           COLOR_BLACK);
+    init_pair(GAME_COLOR_YELLOW, COLOR_YELLOW,          COLOR_BLACK);
+    init_pair(GAME_COLOR_RED,    COLOR_RED,             COLOR_BLACK);
 }
 
 void deinit()
 {
+    free(draw_buffer_ptr);
     endwin();
 }
 
@@ -71,8 +83,10 @@ void render_buffer()
     while (i < draw_buffer_idx) {
         tile = draw_buffer_ptr[i];
         idx = (draw_buffer_ptr[i + 2] << 8) | draw_buffer_ptr[i + 1];
+        attron(COLOR_PAIR(draw_buffer_ptr[i + 3]));
         mvaddch(idx_to_y(idx), idx_to_x(idx), tile);
-        i += 3;
+        attroff(COLOR_PAIR(draw_buffer_ptr[i + 3]));
+        i += 4;
     }
 
     draw_buffer_idx = 0;
@@ -80,13 +94,9 @@ void render_buffer()
 
 void wait_for_vblank() {}
 
-void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsigned char color)
+void add_to_draw_buffer_idx(unsigned short idx, unsigned char ch, unsigned char color)
 {
-    unsigned short idx;
-
-    idx = xy_to_idx(x, y);
-
-    if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 3) {
+    if (draw_buffer_idx > MAX_DRAW_BUFFER_SIZE - 4) {
         // TODO error
         return;
     }
@@ -94,5 +104,12 @@ void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsi
     draw_buffer_ptr[draw_buffer_idx + 0] = ch;
     draw_buffer_ptr[draw_buffer_idx + 1] = idx & 0xFF;
     draw_buffer_ptr[draw_buffer_idx + 2] = (idx >> 8) & 0xFF;
-    draw_buffer_idx += 3;
+    draw_buffer_ptr[draw_buffer_idx + 3] = color;
+    draw_buffer_idx += 4;
+}
+
+void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsigned char color)
+{
+    unsigned short idx  = xy_to_idx(x, y);
+    add_to_draw_buffer_idx(idx, ch, color);
 }
