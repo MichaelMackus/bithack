@@ -22,7 +22,7 @@ extern void clear_screen();
 extern void add_to_draw_buffer(unsigned char x, unsigned char y, unsigned char ch, unsigned char color);
 
 void draw_status_line();
-void draw_tiles_player_can_see();
+void draw_tiles_player_can_see(unsigned char prev_x, unsigned char prev_y);
 void draw_initial_scene();
 
 #endif

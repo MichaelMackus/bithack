@@ -43,6 +43,7 @@ int main()
     unsigned char input = 0;
     unsigned char quit = 0;
     unsigned char lost = 0;
+    unsigned char prev_x, prev_y;
 
     turn = 1;
     init();
@@ -63,6 +64,8 @@ int main()
         do {
             input = read_input();
         } while (input == 0);
+        prev_x = player.x;
+        prev_y = player.y;
         switch (input) {
             case 'q':
             case 'Q':
@@ -71,29 +74,29 @@ int main()
             case 'r':
                 generate_dlevel();
                 clear_screen();
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(player.x, player.y);
                 break;
             case 'R':
                 generate_dlevel();
                 clear_screen();
                 render_map(dungeon_tiles, dungeon_tiles_end);
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(prev_x, prev_y);
                 break;
             case 'j':
                 bump_player(DIRECTION_DOWN);
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(prev_x, prev_y);
                 break;
             case 'k':
                 bump_player(DIRECTION_UP);
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(prev_x, prev_y);
                 break;
             case 'l':
                 bump_player(DIRECTION_RIGHT);
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(prev_x, prev_y);
                 break;
             case 'h':
                 bump_player(DIRECTION_LEFT);
-                draw_tiles_player_can_see();
+                draw_tiles_player_can_see(prev_x, prev_y);
                 break;
             case '>':
             case '\n':
