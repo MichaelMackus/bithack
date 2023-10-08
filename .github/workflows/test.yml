@@ -18,7 +18,10 @@ jobs:
           submodules: recursive
       - run: |
           sudo apt update
-          sudo apt install libncurses-dev gcc clang make -y
+          sudo apt install libncurses-dev gcc clang cc65 make -y
       - name: Run CTest
         run: |
           make test
+          make clean && make rl
+          make clean && make rl.nes
+          make clean && make rl.prg
