@@ -5,10 +5,10 @@ MAKEFLAGS+= --no-builtin-rules
 rl:
 	make -f Makefile-gcc OBJS="main.o $(OBJS)" all
 rl.prg:
-	python img_to_6502.py # generate our tilesets
+	python3 img_to_6502.py # generate our tilesets
 	make -f Makefile-c64 OBJS="main.o $(OBJS)" all
 rl.nes:
-	python img_to_6502.py # generate our tilesets
+	python3 img_to_6502.py # generate our tilesets
 	make -f Makefile-nes OBJS="main.o $(OBJS)" all
 
 clean:
