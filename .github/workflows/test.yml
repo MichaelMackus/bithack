@@ -18,7 +18,7 @@ jobs:
           submodules: recursive
       - run: |
           sudo apt update
-          sudo apt install libncurses-dev gcc clang cc65 make -y
+          sudo apt install libncurses-dev gcc clang cc65 make python3-pil -y
       - name: Run CTest
         run: |
           make test
