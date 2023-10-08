@@ -42,7 +42,9 @@ void clear_screen()
 
 void cputsxy(unsigned char x, unsigned char y, const char *str)
 {
+    attron(COLOR_PAIR(0));
     mvprintw(y, x, str);
+    attroff(COLOR_PAIR(0));
 }
 
 unsigned char read_input()
