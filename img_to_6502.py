@@ -30,7 +30,7 @@ class Tiles:
                         value = self.img.getpixel((x, y)) != (0,0,0)
                         byte |= value << bit
                         bit -= 1
-                    yield byte.to_bytes(1)
+                    yield byte.to_bytes(1, 'little')
 
 def file_to_tiles(filename):
     with open(filename, 'rb') as f:
